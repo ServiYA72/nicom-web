@@ -299,9 +299,9 @@ dialog .x{position:absolute;right:6px;top:6px}
 <section class="ben" aria-label="Por qué comprar en Nicom System">
   <div class="wrap ben-g">
     <div class="b"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><div><strong>Garantía</strong><span>En todos los equipos</span></div></div>
-    <div class="b"><svg class="i" viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0-5 5L3 18l3 3 6.5-6.5a4 4 0 0 0 5-5l-2.5 2.500-2.500-.5-.5-2.500z"/></svg><div><strong>Instalación y soporte</strong><span>En Caracas, con cotización</span></div></div>
-    <div class="b"><svg class="i" viewBox="0 0 24 24"><rect x="2.500" y="5" width="19" height="14" rx="2"/><path d="M2.500 10h19"/></svg><div><strong>Pagas como prefieras</strong><span>Pago Móvil, Zelle, USDT, efectivo</span></div></div>
-    <div class="b"><svg class="i" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg><div><strong>Factura fiscal</strong><span>Con IVA aparte</span></div></div>
+    <div class="b"><svg class="i" viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.800"/><circle cx="17" cy="18" r="1.800"/></svg><div><strong>Delivery y envíos</strong><span>Caracas por zonas y courier nacional</span></div></div>
+    <div class="b"><svg class="i" viewBox="0 0 24 24"><rect x="2.500" y="5" width="19" height="14" rx="2"/><path d="M2.500 10h19M7 15h4"/></svg><div><strong>Confirmamos tu pago</strong><span>Y tu pedido, por WhatsApp</span></div></div>
+    <div class="b"><svg class="i" viewBox="0 0 24 24"><path d="M14.500 6.500a4 4 0 0 0-5 5L3 18l3 3 6.500-6.500a4 4 0 0 0 5-5l-2.500 2.500-2.500-.5-.5-2.500z"/></svg><div><strong>Instalación y soporte</strong><span>En Caracas, con cotización</span></div></div>
   </div>
 </section>
 
@@ -462,7 +462,8 @@ dialog .x{position:absolute;right:6px;top:6px}
     <div class="sec-head"><h2>Preguntas frecuentes</h2></div>
     <div class="faqs">
       <details class="faq"><summary>¿Cómo pago?</summary><p>Pago Móvil, transferencia, Zelle, Binance/USDT o efectivo. Te damos el monto exacto en Bs. o en $.</p></details>
-      <details class="faq"><summary>¿Hacen envíos?</summary><p>Sí. Coordinamos la entrega por WhatsApp.</p></details>
+      <details class="faq"><summary>¿Hacen envíos?</summary><p>Sí. Delivery en Caracas por zonas y envío nacional por courier. Coordinamos el costo y el tiempo por WhatsApp.</p></details>
+      <details class="faq"><summary>¿Cuándo pago?</summary><p>Primero confirmamos que el producto esté disponible y cuándo te llega. Después pagas, y te confirmamos tu pago por WhatsApp.</p></details>
       <details class="faq"><summary>¿Tienen garantía?</summary><p>Sí, todos los equipos la incluyen.</p></details>
       <details class="faq"><summary>¿Dan factura?</summary><p>Sí. El IVA se factura aparte.</p></details>
       <details class="faq"><summary>¿Instalan?</summary><p>Sí, en Caracas y con cotización previa.</p></details>
@@ -536,7 +537,7 @@ dialog .x{position:absolute;right:6px;top:6px}
     <label><input type="radio" name="metodo" value="Binance / USDT">Binance P2P / USDT</label>
     <label><input type="radio" name="metodo" value="Efectivo">Efectivo</label>
   </div>
-  <p class="iva">Al enviar, te respondemos por WhatsApp con el monto exacto y los datos para pagar. Aún no se cobra nada.</p>
+  <p class="iva"><strong>Primero confirmamos la disponibilidad</strong> de tu pedido y el tiempo de entrega. Luego te enviamos el monto exacto y los datos para pagar, y confirmamos tu pago. Aún no se cobra nada.</p>
   <button class="btn btn-verde" id="btnEnviar" style="width:100%;margin-top:14px;white-space:normal"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg>Enviar pedido por WhatsApp</button>
 </div></dialog>
 
@@ -554,7 +555,7 @@ var CFG={
   wa:'584242342204',
   pagina:24
 };
-var CHIPS=['Cámaras y CCTV','Control de acceso','UPS y energía','Redes','Laptops','Desktops','Impresoras','Accesorios','Software y licencias'];
+var CHIPS=['Cámaras y CCTV','Control de acceso','UPS y energía','Redes','Laptops','Desktops','Monitores','Impresoras','Componentes de PC','Almacenamiento y memoria','Audio y sonido','Accesorios','Software y licencias'];
 var CONTEO=['Cámaras y CCTV','Control de acceso','UPS y energía','Redes','Software y licencias','Laptops'];
 var LIST='id,nombre,categoria,imagen_url,stock,precio_efectivo_usd,precio_bs,bajo_de_precio,precio_anterior_usd';
 
@@ -566,6 +567,19 @@ function usd(n){return '$'+Number(n).toLocaleString('en-US',{minimumFractionDigi
 function bs(n){return 'Bs. '+Number(n).toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function waUrl(t){return 'https://wa.me/'+CFG.wa+'?text='+encodeURIComponent(t)}
 function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2200)}
+/* Nombre legible: quita códigos [entre corchetes] y pasa MAYÚSCULAS a minúsculas, sin tocar la base de datos */
+var MIN={de:1,del:1,con:1,para:1,y:1,en:1,la:1,el:1,los:1,las:1,por:1,a:1,o:1,un:1,una:1};
+function limpio(n){
+  n=String(n==null?'':n).replace(/\s*\[[^\]]*\]\s*/g,' ').replace(/\s+/g,' ').trim();
+  var L=n.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ]/g,'');
+  if(!L||L.replace(/[^A-ZÁÉÍÓÚÑ]/g,'').length/L.length<0.7)return n;
+  return n.split(' ').map(function(w,i){
+    var b=w.toLowerCase();
+    if(i>0&&MIN[b])return b;
+    if(/\d/.test(w)||(w.length<=3&&w===w.toUpperCase()))return w;
+    return w.charAt(0)+w.slice(1).toLowerCase();
+  }).join(' ');
+}
 /* Producto sin foto: se muestra el logo de Nicom en tenue */
 var PH='<img class="phl" src="img/logo-nicom.png" alt="">';
 
@@ -592,8 +606,8 @@ function cardHtml(p){
   var anterior=(p.bajo_de_precio&&p.precio_anterior_usd)?'<s>'+usd(p.precio_anterior_usd)+'</s>':'';
   var btn=sin?'<a class="btn btn-verde" target="_blank" rel="noopener" href="'+esc(waUrl('Hola Nicom System, quiero consultar disponibilidad de: '+p.nombre.slice(0,120)))+'">Consultar disponibilidad</a>'
             :'<button class="btn btn-azul" data-add="'+esc(p.id)+'">Agregar al pedido</button>';
-  return '<article class="card"><button class="card-img" data-open="'+esc(p.id)+'" aria-label="Ver detalle de '+esc(p.nombre)+'">'+(img?'<img src="'+esc(img)+'" alt="'+esc(p.nombre)+'" loading="lazy" onerror="this.outerHTML=PH">':PH)+tag+'</button>'
-   +'<div class="card-b"><span class="cat">'+esc(p.categoria||'')+'</span><h3 data-open="'+esc(p.id)+'">'+esc(p.nombre)+'</h3>'
+  return '<article class="card"><button class="card-img" data-open="'+esc(p.id)+'" aria-label="Ver detalle de '+esc(limpio(p.nombre))+'">'+(img?'<img src="'+esc(img)+'" alt="'+esc(limpio(p.nombre))+'" loading="lazy" onerror="this.outerHTML=PH">':PH)+tag+'</button>'
+   +'<div class="card-b"><span class="cat">'+esc(p.categoria||'')+'</span><h3 data-open="'+esc(p.id)+'">'+esc(limpio(p.nombre))+'</h3>'
    +'<div class="price">'+usd(p.precio_efectivo_usd)+anterior+'</div><div class="iva">+ IVA'+(p.precio_bs?' · '+bs(p.precio_bs):'')+'</div>'+btn+'</div></article>';
 }
 
@@ -602,11 +616,11 @@ var V={i:0,d:[]};
 function pintarV(){
   var p=V.d[V.i];if(!p)return;
   var im=okUrl(p.imagen_url);
-  $('#vitImg').innerHTML=im?'<img src="'+esc(im)+'" alt="'+esc(p.nombre)+'">':PH;
+  $('#vitImg').innerHTML=im?'<img src="'+esc(im)+'" alt="'+esc(limpio(p.nombre))+'">':PH;
   $('#vitImg').setAttribute('data-open',p.id);
   $('#vitCat').textContent=p.categoria||'';
   $('#vitN').textContent=(V.i+1)+' de '+V.d.length;
-  $('#vitNom').textContent=p.nombre;
+  $('#vitNom').textContent=limpio(p.nombre);
   $('#vitPrecio').innerHTML=usd(p.precio_efectivo_usd)+((p.bajo_de_precio&&p.precio_anterior_usd)?'<s>'+usd(p.precio_anterior_usd)+'</s>':'');
   $('#vitIva').textContent='+ IVA'+(p.precio_bs?' · '+bs(p.precio_bs):'');
   $('#vitAdd').setAttribute('data-add',p.id);
@@ -635,7 +649,7 @@ function cargarBajaron(){
     if(!d.length)return;
     guardar(d);
     $('#listaPItems').innerHTML=d.map(function(p){
-      return '<button class="pl" data-open="'+esc(p.id)+'"><span class="pn">'+esc(p.nombre)+'</span><span class="pp"><s>'+usd(p.precio_anterior_usd||0)+'</s>'+usd(p.precio_efectivo_usd)+'</span></button>';
+      return '<button class="pl" data-open="'+esc(p.id)+'"><span class="pn">'+esc(limpio(p.nombre))+'</span><span class="pp"><s>'+usd(p.precio_anterior_usd||0)+'</s>'+usd(p.precio_efectivo_usd)+'</span></button>';
     }).join('');
     $('#listaP').hidden=!$('#vit').hidden;
     var t=d.filter(function(p){return p.precio_bs&&Number(p.precio_efectivo_usd)>0})[0];
@@ -739,8 +753,8 @@ function abrirProducto(id){
       if(pares.length)sp='<div class="spec">'+pares.map(function(x){return'<div><span>'+esc(x[0])+'</span><span>'+esc(x[1])+'</span></div>'}).join('')+'</div>';
     }
     var sin=!(q.stock>0);
-    b.innerHTML='<button class="x" data-close aria-label="Cerrar">×</button><h2>'+esc(q.nombre)+'</h2>'
-     +'<div class="big" id="big">'+(fotos[0]?'<img src="'+esc(fotos[0])+'" alt="'+esc(q.nombre)+'">':PH)+'</div>'
+    b.innerHTML='<button class="x" data-close aria-label="Cerrar">×</button><h2>'+esc(limpio(q.nombre))+'</h2>'
+     +'<div class="big" id="big">'+(fotos[0]?'<img src="'+esc(fotos[0])+'" alt="'+esc(limpio(q.nombre))+'">':PH)+'</div>'
      +(fotos.length>1?'<div class="gal">'+fotos.map(function(f){return'<img src="'+esc(f)+'" alt="" loading="lazy" data-foto="'+esc(f)+'">'}).join('')+'</div>':'')
      +'<div class="price" style="margin-top:14px">'+usd(q.precio_efectivo_usd)+'</div><div class="iva">+ IVA'+(q.precio_bs?' · '+bs(q.precio_bs):'')+(q.sku?' · Ref: '+esc(q.sku):'')+'</div>'
      +(q.descripcion?'<div class="desc">'+esc(String(q.descripcion).slice(0,900))+'</div>':'')+sp
@@ -775,7 +789,7 @@ function pintarC(){
   if(!C.length){box.innerHTML='<div class="vacio" style="margin-top:16px">Tu pedido está vacío.<br>Agrega productos desde la tienda.</div>';$('#footCarrito').style.display='none';return}
   $('#footCarrito').style.display='';
   box.innerHTML=C.map(function(x,i){
-    return '<div class="it"><div class="im">'+(x.img?'<img src="'+esc(x.img)+'" alt="">':PH)+'</div><div><div class="n">'+esc(x.nombre)+'</div><div class="q"><button data-q2="-1" data-i="'+i+'" aria-label="Menos">−</button><span>'+x.qty+'</span><button data-q2="1" data-i="'+i+'" aria-label="Más">+</button><button class="del" data-del="'+i+'">Quitar</button></div></div><strong>'+usd(x.precio*x.qty)+'</strong></div>';
+    return '<div class="it"><div class="im">'+(x.img?'<img src="'+esc(x.img)+'" alt="">':PH)+'</div><div><div class="n">'+esc(limpio(x.nombre))+'</div><div class="q"><button data-q2="-1" data-i="'+i+'" aria-label="Menos">−</button><span>'+x.qty+'</span><button data-q2="1" data-i="'+i+'" aria-label="Más">+</button><button class="del" data-del="'+i+'">Quitar</button></div></div><strong>'+usd(x.precio*x.qty)+'</strong></div>';
   }).join('');
   $('#totUsd').textContent=usd(t.u);
   $('#totBs').textContent=t.b?'≈ '+bs(t.b)+' (referencial, a la tasa del día)':'';
@@ -804,7 +818,7 @@ $('#btnEnviar').onclick=function(){
   if(nom.length<2){$('#ePago').textContent='Escribe tu nombre para identificar tu pedido.';$('#pNombre').focus();return}
   var m=(document.querySelector('input[name=metodo]:checked')||{}).value||'';
   var t=totales();
-  var msg='Hola Nicom System, quiero confirmar este pedido:\n'+C.map(function(x){return '• '+x.qty+' x '+x.nombre.slice(0,80)+' — '+usd(x.precio*x.qty)}).join('\n')
+  var msg='Hola Nicom System, quiero este pedido (confirmen disponibilidad y entrega):\n'+C.map(function(x){return '• '+x.qty+' x '+x.nombre.slice(0,80)+' — '+usd(x.precio*x.qty)}).join('\n')
     +'\n\nTotal: '+usd(t.u)+' (sin IVA)'+(t.b?'\nReferencia en Bs.: '+bs(t.b):'')+'\nMétodo de pago: '+m+'\nNombre: '+nom;
   try{fetch(CFG.url+'/functions/v1/registrar-lead-catalogo',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',apikey:CFG.key,Authorization:'Bearer '+CFG.key},
     body:JSON.stringify({tenant_slug:CFG.slug,items:C.map(function(x){return{producto_id:x.id,nombre:x.nombre,cantidad:x.qty,precio_efectivo_usd:x.precio}}),total_usd:t.u,mensaje:msg})}).catch(function(){})}catch(_){}
