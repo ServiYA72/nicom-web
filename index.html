@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nicom System C.A. | Seguridad, energía y tecnología en Caracas</title>
-<meta name="description" content="Cámaras CCTV, control de acceso, UPS, redes, laptops, punto de venta y software en Caracas. Compra en línea o cotiza por WhatsApp. Instalación y soporte con garantía.">
+<title>Cámaras de seguridad, UPS y control de acceso en Caracas | Nicom System</title>
+<meta name="description" content="Venta e instalación de cámaras de seguridad, UPS, control de acceso biométrico, redes y punto de venta en Caracas. Compra en línea o cotiza por WhatsApp. Garantía y soporte.">
 <link rel="canonical" href="https://nicomsystem.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Nicom System C.A. | Seguridad, energía y tecnología en Caracas">
@@ -88,6 +88,24 @@ header.top{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px so
 .pl .pp{font-family:Archivo,sans-serif;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
 .pl .pp s{display:block;font-weight:400;font-size:12px;color:var(--gris)}
 .pl:hover .pn{text-decoration:underline}
+.colder{align-self:start;min-width:0}
+.vit{background:#fff;color:var(--tinta);border-radius:8px;overflow:hidden}
+.vit-img{display:grid;place-items:center;width:100%;aspect-ratio:4/3;background:#fff;border:0;padding:18px;cursor:pointer}
+.vit-img img{width:100%;height:100%;object-fit:contain}
+.vit-b{padding:16px 18px 18px;border-top:4px solid var(--verde)}
+.vit-top{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--gris)}
+.vit-b h2{color:var(--tinta);font-size:19px;line-height:1.25;margin:6px 0 2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vit-b .price{font-size:30px}
+.vit-acc{display:flex;gap:8px;margin-top:14px}
+.vit-acc .vit-nav{min-width:48px;padding:0;font-size:26px;line-height:1}
+.vit-acc #vitAdd{flex:1}
+.ben{padding:26px 0;background:#fff;border-bottom:1px solid var(--linea)}
+.ben-g{display:grid;grid-template-columns:1fr 1fr;gap:18px 14px}
+.ben .b{display:flex;gap:10px;align-items:flex-start}
+.ben .b svg{color:var(--verde-o);width:28px;height:28px;margin-top:2px}
+.ben .b strong{display:block;font-family:Archivo,sans-serif;font-stretch:108%;font-size:15px;line-height:1.25}
+.ben .b span{display:block;font-size:13px;color:var(--gris);line-height:1.35;margin-top:2px}
+@media(min-width:900px){.ben-g{grid-template-columns:repeat(4,1fr);gap:24px}.vit-b h2{font-size:22px}}
 /* índice de categorías */
 .indice{display:grid;gap:0 40px;border-top:2px solid var(--tinta)}
 .idx{display:flex;justify-content:space-between;align-items:baseline;gap:12px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--linea);padding:16px 2px;text-decoration:none;color:inherit}
@@ -254,10 +272,36 @@ dialog .x{position:absolute;right:6px;top:6px}
       <div class="sug"><span>Lo más buscado:</span><button data-q="cámara">cámaras</button><button data-q="UPS">UPS</button><button data-q="router">routers</button><button data-q="laptop">laptops</button><button data-q="impresora">impresoras</button></div>
       <a class="btn btn-linea" data-wa="Hola Nicom System, quiero una cotización de: ____." href="#" rel="noopener"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg>Cotizar por WhatsApp</a>
     </div>
-    <div class="lista-p" id="listaP" hidden>
-      <h2>Bajaron de precio</h2>
-      <div id="listaPItems"></div>
+    <div class="colder">
+      <div class="vit" id="vit" hidden>
+        <button class="vit-img" id="vitImg" aria-label="Ver detalle del producto"></button>
+        <div class="vit-b">
+          <div class="vit-top"><span class="vit-cat" id="vitCat"></span><span class="vit-n" id="vitN"></span></div>
+          <h2 id="vitNom"></h2>
+          <div class="price" id="vitPrecio"></div>
+          <div class="iva" id="vitIva"></div>
+          <div class="vit-acc">
+            <button class="btn btn-verde" id="vitAdd">Agregar al pedido</button>
+            <button class="btn btn-borde vit-nav" id="vitPrev" aria-label="Producto anterior">&lsaquo;</button>
+            <button class="btn btn-borde vit-nav" id="vitNext" aria-label="Producto siguiente">&rsaquo;</button>
+          </div>
+        </div>
+      </div>
+      <div class="lista-p" id="listaP" hidden>
+        <h2>Bajaron de precio</h2>
+        <div id="listaPItems"></div>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- ===== GARANTÍA Y SERVICIO ===== -->
+<section class="ben" aria-label="Por qué comprar en Nicom System">
+  <div class="wrap ben-g">
+    <div class="b"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><div><strong>Garantía</strong><span>En todos los equipos</span></div></div>
+    <div class="b"><svg class="i" viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0-5 5L3 18l3 3 6.5-6.5a4 4 0 0 0 5-5l-2.5 2.500-2.500-.5-.5-2.500z"/></svg><div><strong>Instalación y soporte</strong><span>En Caracas, con cotización</span></div></div>
+    <div class="b"><svg class="i" viewBox="0 0 24 24"><rect x="2.500" y="5" width="19" height="14" rx="2"/><path d="M2.500 10h19"/></svg><div><strong>Pagas como prefieras</strong><span>Pago Móvil, Zelle, USDT, efectivo</span></div></div>
+    <div class="b"><svg class="i" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg><div><strong>Factura fiscal</strong><span>Con IVA aparte</span></div></div>
   </div>
 </section>
 
@@ -441,7 +485,7 @@ dialog .x{position:absolute;right:6px;top:6px}
     <form class="f" id="formContacto" novalidate>
       <div><label for="cNombre">Nombre</label><input id="cNombre" autocomplete="name" maxlength="80"><div class="err" id="eNombre"></div></div>
       <div><label for="cTel">Teléfono / WhatsApp</label><input id="cTel" type="tel" inputmode="tel" autocomplete="tel" maxlength="20"><div class="err" id="eTel"></div></div>
-      <div><label for="cInteres">¿Qué te interesa?</label><select id="cInteres"><option>Cámaras y seguridad</option><option>Control de acceso</option><option>UPS y energía</option><option>Redes</option><option>Punto de venta / máquina fiscal</option><option>Nicom Punto (caja)</option><option>Software administrativo</option><option>Otro</option></select></div>
+      <div><label for="cInteres">¿Qué te interesa?</label><select id="cInteres"><option>Cámaras y seguridad</option><option>Control de acceso</option><option>UPS y energía</option><option>Redes</option><option>Punto de venta / máquina fiscal</option><option>Nicom Punto (caja)</option><option>Software administrativo</option><option>Comentario o sugerencia</option><option>Otro</option></select></div>
       <div><label for="cMsg">Cuéntanos qué necesitas</label><textarea id="cMsg" maxlength="600"></textarea><div class="err" id="eMsg"></div></div>
       <button class="btn btn-verde" type="submit">Enviar por WhatsApp</button>
     </form>
@@ -454,7 +498,7 @@ dialog .x{position:absolute;right:6px;top:6px}
     <div class="fbrand"><img src="img/logo-nicom.png" alt="" width="34" height="34" loading="lazy">Nicom System C.A.</div>
     RIF J-29487693-5 · WhatsApp +58 424-234-2204<br>
     Av. Anauco, San Bernardino, Edf. La Floridiana, Municipio Libertador, Caracas, CP 1011<br>
-    <span style="font-size:13px">Precios sin IVA. El IVA va en factura aparte.</span> · <a href="login.html" rel="nofollow">Acceso interno</a>
+    <span style="font-size:13px">Precios sin IVA. El IVA va en factura aparte.</span> · <a href="https://catalogo.nicomsystem.com/login.html" rel="nofollow">Acceso interno</a>
   </div>
 </footer>
 
@@ -554,6 +598,36 @@ function cardHtml(p){
 }
 
 /* ===== Hero: lista de productos que bajaron de precio + tasa usada ===== */
+var V={i:0,d:[]};
+function pintarV(){
+  var p=V.d[V.i];if(!p)return;
+  var im=okUrl(p.imagen_url);
+  $('#vitImg').innerHTML=im?'<img src="'+esc(im)+'" alt="'+esc(p.nombre)+'">':PH;
+  $('#vitImg').setAttribute('data-open',p.id);
+  $('#vitCat').textContent=p.categoria||'';
+  $('#vitN').textContent=(V.i+1)+' de '+V.d.length;
+  $('#vitNom').textContent=p.nombre;
+  $('#vitPrecio').innerHTML=usd(p.precio_efectivo_usd)+((p.bajo_de_precio&&p.precio_anterior_usd)?'<s>'+usd(p.precio_anterior_usd)+'</s>':'');
+  $('#vitIva').textContent='+ IVA'+(p.precio_bs?' · '+bs(p.precio_bs):'');
+  $('#vitAdd').setAttribute('data-add',p.id);
+}
+function setTasa(p){
+  if(p&&p.precio_bs&&Number(p.precio_efectivo_usd)>0){var t=Number(p.precio_bs)/Number(p.precio_efectivo_usd);
+    $('#franja').textContent='Precios en dólares, sin IVA. Los bolívares se calculan a Bs. '+t.toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})+' por dólar.'}
+}
+function cargarVitrina(){
+  api('vista_catalogo_publico?select='+LIST+'&tenant_slug=eq.'+CFG.slug+'&tiene_fotos=eq.true&stock=gt.0&order=bajo_de_precio.desc,precio_efectivo_usd.desc&limit=6')
+  .then(function(r){if(!r.ok)throw 0;return r.json()})
+  .then(function(d){
+    d=d.filter(function(p){return okUrl(p.imagen_url)});
+    if(!d.length)return;
+    guardar(d);V.d=d;V.i=0;pintarV();setTasa(d[0]);
+    $('#vit').hidden=false;$('#listaP').hidden=true;
+    var multi=d.length>1;$('#vitPrev').hidden=$('#vitNext').hidden=!multi;
+  }).catch(function(){});
+}
+$('#vitPrev').onclick=function(){V.i=(V.i+V.d.length-1)%V.d.length;pintarV()};
+$('#vitNext').onclick=function(){V.i=(V.i+1)%V.d.length;pintarV()};
 function cargarBajaron(){
   api('vista_catalogo_publico?select=id,nombre,categoria,imagen_url,stock,precio_efectivo_usd,precio_bs,bajo_de_precio,precio_anterior_usd&tenant_slug=eq.'+CFG.slug+'&bajo_de_precio=eq.true&stock=gt.0&order=precio_efectivo_usd.desc&limit=5')
   .then(function(r){if(!r.ok)throw 0;return r.json()})
@@ -563,7 +637,7 @@ function cargarBajaron(){
     $('#listaPItems').innerHTML=d.map(function(p){
       return '<button class="pl" data-open="'+esc(p.id)+'"><span class="pn">'+esc(p.nombre)+'</span><span class="pp"><s>'+usd(p.precio_anterior_usd||0)+'</s>'+usd(p.precio_efectivo_usd)+'</span></button>';
     }).join('');
-    $('#listaP').hidden=false;
+    $('#listaP').hidden=!$('#vit').hidden;
     var t=d.filter(function(p){return p.precio_bs&&Number(p.precio_efectivo_usd)>0})[0];
     if(t){var tasa=Number(t.precio_bs)/Number(t.precio_efectivo_usd);
       $('#franja').textContent='Precios en dólares, sin IVA. Los bolívares se calculan a Bs. '+tasa.toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})+' por dólar.'}
@@ -750,7 +824,7 @@ $('#formContacto').onsubmit=function(e){
 };
 
 /* ===== Arranque ===== */
-pintarChips();pintarC();cargarBajaron();cargarConteos();cargarDestacados();cargarCategorias();cargarTienda(true);
+pintarChips();pintarC();cargarVitrina();cargarBajaron();cargarConteos();cargarDestacados();cargarCategorias();cargarTienda(true);
 (function(){var id=new URLSearchParams(location.search).get('producto');if(id&&/^[0-9a-f-]{36}$/i.test(id))abrirProducto(id)})();
 </script>
 </body>
