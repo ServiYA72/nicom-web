@@ -219,3 +219,25 @@ section.cab{padding:34px 0 26px;background:var(--banda);border-bottom:1px solid 
 section.cta{padding:40px 0}
 .azul .pago{color:var(--tinta)}
 @media(min-width:900px){section.cab{padding:48px 0 36px}section.cta{padding:56px 0}}
+/* ===== Nicom Punto (página propia) ===== */
+.mini{font-size:14px;color:#B9CBEA;margin-top:14px}
+.shot-hero img{width:100%;height:auto;border-radius:10px;border:1px solid rgba(255,255,255,.25);box-shadow:0 18px 40px rgba(0,20,60,.35);background:#fff}
+.fgrid{display:grid;gap:0;grid-template-columns:1fr;border-top:2px solid var(--tinta)}
+.fcard{padding:22px 2px;border-bottom:1px solid var(--linea);display:grid;gap:8px}
+.fcard p{color:var(--gris)}
+.ico{width:34px;height:34px;fill:none;stroke:var(--azul);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ptag{display:inline-block;font-family:"Public Sans",sans-serif;font-stretch:100%;font-size:12px;font-weight:600;letter-spacing:0;padding:2px 8px;border-radius:99px;background:var(--azul);color:#fff;vertical-align:middle}
+.shots{display:grid;gap:28px;grid-template-columns:1fr;justify-items:center}
+.shots figure{max-width:340px}.shots img{width:100%;height:auto;border-radius:10px;border:1px solid var(--linea);background:#fff}
+.shots figcaption{font-size:14px;color:var(--gris);margin-top:10px}
+.planes{display:grid;gap:18px;grid-template-columns:1fr}
+.plan{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:24px}
+.plan-plus{border:2px solid var(--azul)}
+.precio{font-family:Archivo,sans-serif;font-stretch:112%;font-weight:800;font-size:46px;line-height:1;margin-top:8px;color:var(--azul)}
+.precio span{font-size:16px;font-weight:600;color:var(--gris);margin-left:4px}
+.plan .btn{width:100%}
+@media(min-width:900px){.fgrid{grid-template-columns:1fr 1fr;column-gap:56px}.shots{grid-template-columns:1fr 1fr;align-items:start}.planes{grid-template-columns:1fr 1fr;max-width:860px}}
+.kick{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--verde)}
+.punto-dest .lista{margin-top:16px}
+.h1-punto{font-size:clamp(30px,4.4vw,50px);line-height:1.05}
+.fcard{align-content:start}

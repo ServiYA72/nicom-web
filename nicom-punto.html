@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nicom Punto: caja, inventario y ganancia real para bodegas y negocios | Nicom System</title>
+<meta name="description" content="Nicom Punto es el sistema de caja, inventario, compras, gastos y ganancia real para bodegas, kioscos y negocios en Venezuela. Desde $15 al mes. Prueba 15 días gratis.">
+<link rel="canonical" href="https://nicomsystem.com/nicom-punto.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nicom Punto: caja, inventario y ganancia real para bodegas y negocios | Nicom System">
+<meta property="og:description" content="Nicom Punto es el sistema de caja, inventario, compras, gastos y ganancia real para bodegas, kioscos y negocios en Venezuela. Desde $15 al mes. Prueba 15 días gratis.">
+<meta property="og:url" content="https://nicomsystem.com/nicom-punto.html">
+<meta property="og:image" content="https://nicomsystem.com/img/logo-nicom.png">
+<meta name="theme-color" content="#0047A8">
+<!-- LOGOS: archivos en la carpeta img/ (reemplaza el archivo para cambiar el logo) -->
+<link rel="icon" type="image/png" href="img/logo-nicom.png">
+<link rel="apple-touch-icon" href="img/logo-nicom.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100,500..800&family=Public+Sans:wght@400;500;600&display=swap">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LocalBusiness","name":"Nicom System C.A.","url":"https://nicomsystem.com/","telephone":"+584242342204","taxID":"J-29487693-5","address":{"@type":"PostalAddress","streetAddress":"Av. Anauco, San Bernardino, Edf. La Floridiana","addressLocality":"Caracas","addressRegion":"Distrito Capital","postalCode":"1011","addressCountry":"VE"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Nicom Punto","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Caja, inventario, compras a proveedores, gastos y ganancia real para bodegas, kioscos y negocios en Venezuela.","url":"https://nicomsystem.com/nicom-punto.html","publisher":{"@type":"Organization","name":"Nicom System C.A."},"offers":[{"@type":"Offer","name":"Plan Básico","price":"15","priceCurrency":"USD"},{"@type":"Offer","name":"Plan Plus","price":"25","priceCurrency":"USD"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Nicom Punto reemplaza la máquina fiscal?","acceptedAnswer":{"@type":"Answer","text":"No. Es tu caja y tu control interno del negocio, y convive con tu máquina fiscal. No sustituye la factura fiscal."}},
+{"@type":"Question","name":"¿Qué pasa si se va el internet?","acceptedAnswer":{"@type":"Answer","text":"Puedes seguir cobrando: las ventas se guardan en el equipo y se envían cuando vuelve la conexión. Recibir mercancía, anotar gastos y descargar respaldos sí necesitan internet."}},
+{"@type":"Question","name":"¿Mis datos están seguros?","acceptedAnswer":{"@type":"Answer","text":"Cada negocio ve solo lo suyo y tus cajeros no ven costos ni ganancias. Además puedes descargar todos tus datos en Excel cuando quieras."}},
+{"@type":"Question","name":"¿Cómo se paga la suscripción?","acceptedAnswer":{"@type":"Answer","text":"Con pago móvil, transferencia nacional, Zelle o Binance. Reportas tu pago dentro de la app y lo confirmamos."}},
+{"@type":"Question","name":"¿Puedo probarlo antes de pagar?","acceptedAnswer":{"@type":"Answer","text":"Sí, 15 días gratis con todo incluido y sin compromiso."}}]}
+</script>
+<link rel="stylesheet" href="estilos.css?v=2">
+</head>
+<body>
+<div class="franja"><div class="wrap" id="franja">Precios en dólares, sin IVA. Caracas, Venezuela.</div></div>
+
+<!-- ===== ENCABEZADO ===== -->
+<header class="top">
+  <div class="wrap nav">
+    <a class="brand" href="./" aria-label="Nicom System C.A., inicio"><img src="img/logo-nicom.png" alt="Logo de Nicom System" width="38" height="38">NICOM SYSTEM</a>
+    <nav class="menu" aria-label="Principal">
+      <a href="tienda.html">Tienda</a><a href="servicios.html">Servicios</a><a href="nicom-punto.html" aria-current="page">Nicom Punto</a><a href="nosotros.html">Nosotros</a><a href="nosotros.html#contacto">Contacto</a>
+    </nav>
+    <a class="btn btn-verde btn-sm" data-wa="Hola Nicom System, quiero una cotización de: ____." href="#" rel="noopener"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg>Cotizar por WhatsApp</a>
+    <button class="cart-btn" id="btnCarrito" aria-label="Ver pedido"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.4a1 1 0 0 0 1 .8h9.2a1 1 0 0 0 1-.8L21 7H6"/></svg><b id="cartN" data-n="0"></b></button>
+    <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false"><svg class="i" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+  </div>
+  <div class="mmenu" id="mmenu">
+    <a href="tienda.html">Tienda</a><a href="servicios.html">Servicios</a><a href="nicom-punto.html" aria-current="page">Nicom Punto</a><a href="nosotros.html">Nosotros</a><a href="nosotros.html#contacto">Contacto</a>
+    <a class="btn btn-verde" data-wa="Hola Nicom System, quiero una cotización de: ____." href="#" rel="noopener">Cotizar por WhatsApp</a>
+  </div>
+</header>
+
+<main id="inicio">
+
+<!-- ===== HERO ===== -->
+<section class="hero azul">
+  <div class="wrap hero-g">
+    <div>
+      <h1 class="h1-punto">Tu caja, tu inventario y tu ganancia real, hechos para el negocio venezolano</h1>
+      <p class="sub">Cobra rápido, controla lo que entra y lo que sale, sabe cuánto debes y cuánto te queda de verdad. Para bodegas, kioscos, mercados y negocios pequeños. Desde $15 al mes.</p>
+      <a class="btn btn-verde" href="https://punto.nicomsystem.com" rel="noopener">Probar 15 días gratis</a>
+      <a class="btn btn-linea" data-wa="Hola, me interesa una demostración de Nicom Punto." href="#" rel="noopener"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg>Pedir una demostración</a>
+      <p class="mini">Sin compromiso. Todo incluido durante la prueba.</p>
+    </div>
+    <div class="shot-hero"><img src="img/pc-caja.webp" width="1100" height="619" alt="Pantalla de caja de Nicom Punto con productos, carrito y total en dólares y bolívares" fetchpriority="high"></div>
+  </div>
+</section>
+
+<!-- ===== LO QUE TE PASA ===== -->
+<section class="banda">
+  <div class="wrap">
+    <div class="sec-head"><h2>Lo que le pasa a casi todo negocio, y cómo se resuelve</h2></div>
+    <div class="filas">
+      <div class="fila"><h3>No sé cuánto gano de verdad</h3><p>Anota el alquiler, la luz y la nómina. Nicom Punto resta tus gastos de la ganancia de las ventas y te muestra cuánto te queda.</p></div>
+      <div class="fila"><h3>La mercancía se me va y no sé por dónde</h3><p>Controlas el inventario por caja, unidad, kilo o litro. Registras mermas y sinceras tus existencias.</p></div>
+      <div class="fila"><h3>Le debo a varios proveedores</h3><p>Cada compra a crédito queda anotada con su fecha de vencimiento. Ves lo que debes a cada uno y registras tus pagos.</p></div>
+      <div class="fila"><h3>Le fío a medio mundo y se me olvida quién debe</h3><p>Fiado con límite por cliente, abonos y saldo siempre a la vista.</p></div>
+      <div class="fila"><h3>La tasa cambia todos los días</h3><p>La tasa BCV o Binance se actualiza sola. Cobras en dólares o bolívares sin sacar la calculadora.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== QUÉ INCLUYE ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><h2>Todo lo que incluye</h2><p>Funciona desde el navegador de tu teléfono, tablet o computadora. Sin instalar nada.</p></div>
+    <div class="fgrid">
+      <div class="fcard"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7M8.5 11h.01M12 11h.01M15.5 11h.01M8.5 14.5h.01M12 14.5h.01M15.5 14.5h.01M8.5 18h.01M12 18h3.5"/></svg><h3>Caja rápida</h3><p>Escanea o busca el producto, cobra en efectivo, pago móvil, punto, Zelle, Binance o fiado, y entrega el ticket impreso o por WhatsApp.</p></div>
+      <div class="fcard"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg><h3>Inventario como se maneja en la calle</h3><p>Compras por caja, guacal o bidón y ventas por unidad, kilo o litro. Productos por peso, mermas y etiquetas con código de barras.</p></div>
+      <div class="fcard"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5 12 4l9 5.5V20H3z"/><path d="M8 20v-6h8v6"/><path d="M8 17h8"/></svg><h3>Compras y proveedores</h3><p>Registra lo que recibes, a quién se lo compraste y lo que todavía debes. Los pagos van bajando la deuda.</p></div>
+      <div class="fcard"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><h3>Gastos y ganancia real</h3><p>Alquiler, luz, nómina, transporte. Ves en una pantalla cuánto ganaste, cuánto gastaste y cuánto te queda.</p></div>
+      <div class="fcard"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg><h3>Pedidos y delivery <span class="ptag">Plus</span></h3><p>Tu lista de precios en un enlace, el cliente arma su carrito y pide con día y hora. Zonas, costo de envío y motorizados.</p></div>
+      <div class="fcard"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg><h3>Respaldo y Excel</h3><p>Descarga tus productos, ventas, clientes, gastos y proveedores cuando quieras. Tus datos son tuyos.</p></div>
+      <div class="fcard"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.4 9.6a2.7 2.7 0 1 1 3.9 2.4c-.8.4-1.3 1-1.3 1.9"/><path d="M12 17.2h.01"/></svg><h3>Ayuda dentro del sistema</h3><p>Pasos cortos para cada pantalla, videos y un botón para escribirnos por WhatsApp. Pensado para quien nunca usó un sistema.</p></div>
+      <div class="fcard"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M7 15h4"/></svg><h3>Reportes y cierre del día</h3><p>Ventas por hora, lo que más se vende, ganancia, caja esperada y cierre. Para saber cómo vas sin esperar al contador.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CAPTURAS ===== -->
+<section class="banda">
+  <div class="wrap">
+    <div class="sec-head"><h2>Así se ve</h2><p>Capturas de la app con datos de ejemplo.</p></div>
+    <div class="shots">
+      <figure><img src="img/hoy.webp" width="520" height="973" loading="lazy" alt="Resumen del día en Nicom Punto: vendido, ganancia, ventas y ventas por hora"><figcaption>Tu día en una pantalla: ventas, ganancia y la hora en que más vendes.</figcaption></figure>
+      <figure><img src="img/p3-cobro.webp" width="520" height="980" loading="lazy" alt="Pantalla de cobro de Nicom Punto con efectivo, pago móvil, punto, fiado y descuento"><figcaption>Cobro con todos los métodos que se usan en Venezuela, y el vuelto calculado.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VENEZUELA ===== -->
+<section>
+  <div class="wrap dos">
+    <div>
+      <h2>Hecho para cómo se trabaja en Venezuela</h2>
+      <p style="color:var(--gris);margin-top:12px">No es un sistema extranjero adaptado. Está pensado para el comercio venezolano: el dólar, el bolívar y la forma de comprar y vender de la calle.</p>
+    </div>
+    <div>
+      <ul class="lista" style="margin-top:0">
+        <li>Tasa del día automática (BCV o Binance), sin cambiarla a mano</li>
+        <li>Si se va el internet, sigues vendiendo: las ventas se envían al volver</li>
+        <li>Pago móvil, punto, Zelle, Binance, efectivo en dólares y bolívares, fiado y vuelto</li>
+        <li>Mercados de frutas y verduras: grupos de precio y pesaje en caja (plan Plus)</li>
+        <li>Convive con tu máquina fiscal: es tu caja y tu control interno</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PLANES ===== -->
+<section class="banda" id="planes">
+  <div class="wrap">
+    <div class="sec-head"><h2>Dos planes, sin letra pequeña</h2><p>Pruébalos 15 días gratis con todo incluido. Todas las funciones de gastos, compras, respaldo y ayuda vienen en los dos planes.</p></div>
+    <div class="planes">
+      <div class="plan"><h3>Básico</h3><p class="precio">$15<span>/mes</span></p>
+        <ul class="lista"><li>Hasta 500 productos</li><li>Tú y 1 cajero</li><li>Caja, inventario y reportes</li><li>Compras, proveedores y gastos</li><li>Respaldo y Excel</li><li>Ayuda dentro del sistema</li></ul>
+        <a class="btn btn-azul" href="https://punto.nicomsystem.com" rel="noopener">Probar gratis</a></div>
+      <div class="plan plan-plus"><h3>Plus</h3><p class="precio">$25<span>/mes</span></p>
+        <ul class="lista"><li>Productos sin límite</li><li>Tú y hasta 9 cajeros</li><li>Todo lo del Básico</li><li>Pedidos con delivery y motorizados</li><li>Autoescaneo por QR y grupos de precio</li><li>Atención prioritaria</li></ul>
+        <a class="btn btn-verde" href="https://punto.nicomsystem.com" rel="noopener">Probar gratis</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PREGUNTAS ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><h2>Preguntas frecuentes</h2></div>
+    <div class="faqs">
+      <details class="faq"><summary>¿Reemplaza la máquina fiscal?</summary><p>No. Es tu caja y tu control interno, y convive con tu máquina fiscal. No sustituye la factura fiscal. Si necesitas una máquina fiscal, también te asesoramos.</p></details>
+      <details class="faq"><summary>¿Qué pasa si se va el internet?</summary><p>Puedes seguir cobrando: las ventas se guardan en el equipo y se envían cuando vuelve la conexión. Recibir mercancía, anotar gastos y descargar respaldos sí necesitan internet.</p></details>
+      <details class="faq"><summary>¿Mis datos están seguros?</summary><p>Cada negocio ve solo lo suyo, y tus cajeros no ven costos ni ganancias. Además puedes descargar todos tus datos en Excel cuando quieras.</p></details>
+      <details class="faq"><summary>¿Qué necesito para usarlo?</summary><p>Un teléfono, tablet o computadora con navegador. La impresora de tickets y el lector de código de barras son opcionales, y si los necesitas te los conseguimos.</p></details>
+      <details class="faq"><summary>¿Cómo pago la suscripción?</summary><p>Con pago móvil, transferencia nacional, Zelle o Binance. Reportas tu pago dentro de la app y lo confirmamos. Te avisamos antes de que venza.</p></details>
+      <details class="faq"><summary>¿Puedo probarlo antes de pagar?</summary><p>Sí. 15 días gratis con todo incluido y sin compromiso.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CIERRE ===== -->
+<section class="azul cta">
+  <div class="wrap dos">
+    <div>
+      <h2>Empieza hoy, sin pagar nada</h2>
+      <p style="margin:12px 0 20px;color:#D7E3F7">Crea tu cuenta, carga tus productos y haz tu primera venta. Si te trancas, te ayudamos por WhatsApp.</p>
+      <a class="btn btn-verde" href="https://punto.nicomsystem.com" rel="noopener">Probar 15 días gratis</a>
+      <a class="btn btn-linea" data-wa="Hola, quiero ayuda para empezar con Nicom Punto." href="#" rel="noopener"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg>Escribir por WhatsApp</a>
+    </div>
+    <div>
+      <p style="font-weight:600;color:#fff">Paga como te quede más cómodo</p>
+      <div class="pagos"><span class="pago">Pago Móvil</span><span class="pago">Transferencia</span><span class="pago">Zelle</span><span class="pago">Binance / USDT</span></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fbrand"><img src="img/logo-nicom.png" alt="" width="34" height="34" loading="lazy">Nicom System C.A.</div>
+    RIF J-29487693-5 · WhatsApp +58 424-234-2204<br>
+    Av. Anauco, San Bernardino, Edf. La Floridiana, Municipio Libertador, Caracas, CP 1011<br>
+    <span style="font-size:13px">Precios sin IVA. El IVA va en factura aparte.</span> · <a href="https://catalogo.nicomsystem.com/login.html" rel="nofollow">Acceso interno</a>
+  </div>
+</footer>
+
+<a class="fwa" data-wa="Hola Nicom System, quiero una cotización de: ____." href="#" rel="noopener" aria-label="Escribir por WhatsApp"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg></a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="iwa" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-1.9.9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.6.8 2 .8 2.1.1.1.1.3 0 .4l-.3.5c-.1.2-.3.3-.1.6.2.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2z"/></symbol></svg>
+
+<!-- ===== CARRITO ===== -->
+<div class="ov" id="ov"></div>
+<aside class="drawer" id="drawer" aria-label="Tu pedido" aria-hidden="true">
+  <header><h2 style="font-size:20px">Tu pedido</h2><button class="x" id="cerrarCarrito" aria-label="Cerrar">×</button></header>
+  <div class="items" id="items"></div>
+  <div class="foot" id="footCarrito">
+    <div class="tot"><span>Total</span><span id="totUsd">$0.00</span></div>
+    <div class="iva" id="totBs" style="margin-top:2px"></div>
+    <div class="iva">Precios sin IVA. El IVA va en factura aparte.</div>
+    <button class="btn btn-azul" id="btnPagar">Continuar con el pedido</button>
+    <button class="btn btn-borde" id="btnVaciar" style="min-height:40px;font-size:14px">Vaciar pedido</button>
+  </div>
+</aside>
+
+<!-- ===== MODAL DE PAGO ===== -->
+<dialog id="dlgPago"><div class="dg co">
+  <button class="x" data-close aria-label="Cerrar">×</button>
+  <h2>Confirma tu pedido</h2>
+  <div class="iva" id="resPago"></div>
+  <label for="pNombre" style="font-size:14px;font-weight:600;display:block;margin-top:14px">Tu nombre</label>
+  <input id="pNombre" autocomplete="name" maxlength="80" placeholder="Para identificar tu pedido">
+  <label for="pTel" style="font-size:14px;font-weight:600;display:block;margin-top:12px">Tu WhatsApp</label>
+  <input id="pTel" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="Ej: 0424 234 2204">
+  <p style="font-weight:600;margin-top:12px">¿Cómo lo recibes?</p>
+  <div class="metodos" id="entregas">
+    <label><input type="radio" name="entrega" value="delivery" checked>Delivery en Caracas</label>
+    <label><input type="radio" name="entrega" value="courier">Envío nacional por courier</label>
+  </div>
+  <label for="pZona" id="lblZona" style="font-size:14px;font-weight:600;display:block">Zona o urbanización en Caracas</label>
+  <input id="pZona" maxlength="100" placeholder="Ej: San Bernardino">
+  <div class="err" id="ePago" style="color:#B3261E"></div>
+  <p style="font-weight:600;margin-top:8px">¿Cómo prefieres pagar?</p>
+  <div class="metodos" id="metodos">
+    <label><input type="radio" name="metodo" value="Pago Móvil" checked>Pago Móvil</label>
+    <label><input type="radio" name="metodo" value="Transferencia">Transferencia nacional</label>
+    <label><input type="radio" name="metodo" value="Zelle">Zelle</label>
+    <label><input type="radio" name="metodo" value="Binance / USDT">Binance P2P / USDT</label>
+    <label><input type="radio" name="metodo" value="Efectivo">Efectivo</label>
+  </div>
+  <p class="iva"><strong>Primero confirmamos la disponibilidad</strong> de tu pedido y el tiempo de entrega. Luego te enviamos el monto exacto y los datos para pagar, y confirmamos tu pago. Aún no se cobra nada.</p>
+  <button class="btn btn-verde" id="btnEnviar" style="width:100%;margin-top:14px;white-space:normal"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg>Enviar pedido por WhatsApp</button>
+</div></dialog>
+
+<!-- ===== MODAL DE PRODUCTO ===== -->
+<dialog id="dlgProd"><div class="dg" id="prodBody"></div></dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="nicom.js?v=1" defer></script>
+</body>
+</html>
