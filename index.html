@@ -528,6 +528,15 @@ dialog .x{position:absolute;right:6px;top:6px}
   <div class="iva" id="resPago"></div>
   <label for="pNombre" style="font-size:14px;font-weight:600;display:block;margin-top:14px">Tu nombre</label>
   <input id="pNombre" autocomplete="name" maxlength="80" placeholder="Para identificar tu pedido">
+  <label for="pTel" style="font-size:14px;font-weight:600;display:block;margin-top:12px">Tu WhatsApp</label>
+  <input id="pTel" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="Ej: 0424 234 2204">
+  <p style="font-weight:600;margin-top:12px">¿Cómo lo recibes?</p>
+  <div class="metodos" id="entregas">
+    <label><input type="radio" name="entrega" value="delivery" checked>Delivery en Caracas</label>
+    <label><input type="radio" name="entrega" value="courier">Envío nacional por courier</label>
+  </div>
+  <label for="pZona" id="lblZona" style="font-size:14px;font-weight:600;display:block">Zona o urbanización en Caracas</label>
+  <input id="pZona" maxlength="100" placeholder="Ej: San Bernardino">
   <div class="err" id="ePago" style="color:#B3261E"></div>
   <p style="font-weight:600;margin-top:8px">¿Cómo prefieres pagar?</p>
   <div class="metodos" id="metodos">
@@ -814,17 +823,26 @@ $('#btnPagar').onclick=function(){
   $('#ePago').textContent='';abrirC(false);$('#dlgPago').showModal();
 };
 $('#btnEnviar').onclick=function(){
-  var nom=$('#pNombre').value.trim();
+  var nom=$('#pNombre').value.trim(),tel=$('#pTel').value.trim(),zona=$('#pZona').value.trim();
+  var ent=(document.querySelector('input[name=entrega]:checked')||{}).value||'delivery';
   if(nom.length<2){$('#ePago').textContent='Escribe tu nombre para identificar tu pedido.';$('#pNombre').focus();return}
+  if(tel.replace(/\D/g,'').length<7){$('#ePago').textContent='Escribe tu WhatsApp para confirmarte el pedido.';$('#pTel').focus();return}
+  if(zona.length<2){$('#ePago').textContent=ent==='courier'?'Escribe tu ciudad y estado.':'Escribe tu zona o urbanización.';$('#pZona').focus();return}
+  $('#ePago').textContent='';
   var m=(document.querySelector('input[name=metodo]:checked')||{}).value||'';
   var t=totales();
   var msg='Hola Nicom System, quiero este pedido (confirmen disponibilidad y entrega):\n'+C.map(function(x){return '• '+x.qty+' x '+x.nombre.slice(0,80)+' — '+usd(x.precio*x.qty)}).join('\n')
-    +'\n\nTotal: '+usd(t.u)+' (sin IVA)'+(t.b?'\nReferencia en Bs.: '+bs(t.b):'')+'\nMétodo de pago: '+m+'\nNombre: '+nom;
+    +'\n\nTotal: '+usd(t.u)+' (sin IVA)'+(t.b?'\nReferencia en Bs.: '+bs(t.b):'')+'\nMétodo de pago: '+m+'\nNombre: '+nom+'\nWhatsApp: '+tel+'\nEntrega: '+(ent==='courier'?'Envío nacional por courier':'Delivery en Caracas')+' — '+zona;
   try{fetch(CFG.url+'/functions/v1/registrar-lead-catalogo',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',apikey:CFG.key,Authorization:'Bearer '+CFG.key},
-    body:JSON.stringify({tenant_slug:CFG.slug,items:C.map(function(x){return{producto_id:x.id,nombre:x.nombre,cantidad:x.qty,precio_efectivo_usd:x.precio}}),total_usd:t.u,mensaje:msg})}).catch(function(){})}catch(_){}
+    body:JSON.stringify({tenant_slug:CFG.slug,items:C.map(function(x){return{producto_id:x.id,nombre:x.nombre,cantidad:x.qty,precio_efectivo_usd:x.precio}}),total_usd:t.u,mensaje:msg,origen:'web',cliente_nombre:nom,cliente_telefono:tel,metodo_pago:m,entrega_tipo:ent,entrega_zona:zona,vendedor_codigo:vendedor()})}).catch(function(){})}catch(_){}
   window.open(waUrl(msg),'_blank','noopener');
   $('#dlgPago').close();
 };
+
+/* ===== Enlace de vendedor (?v=codigo): se recuerda para asignarle el pedido ===== */
+(function(){var v=new URLSearchParams(location.search).get('v');if(v&&/^[A-Za-z0-9_-]{1,20}$/.test(v)){try{localStorage.setItem('nicom_v',v)}catch(_){}}})();
+function vendedor(){try{return localStorage.getItem('nicom_v')||null}catch(_){return null}}
+$('#entregas').addEventListener('change',function(){var c=(document.querySelector('input[name=entrega]:checked')||{}).value==='courier';$('#lblZona').textContent=c?'Ciudad y estado':'Zona o urbanización en Caracas';$('#pZona').placeholder=c?'Ej: Valencia, Carabobo':'Ej: San Bernardino'});
 
 /* ===== Formulario de contacto (validación + WhatsApp) ===== */
 $('#formContacto').onsubmit=function(e){
