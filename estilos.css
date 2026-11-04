@@ -221,7 +221,7 @@ section.cta{padding:40px 0}
 @media(min-width:900px){section.cab{padding:48px 0 36px}section.cta{padding:56px 0}}
 /* ===== Nicom Punto (página propia) ===== */
 .mini{font-size:14px;color:#B9CBEA;margin-top:14px}
-.shot-hero img{width:100%;height:auto;border-radius:10px;border:1px solid rgba(255,255,255,.25);box-shadow:0 18px 40px rgba(0,20,60,.35);background:#fff}
+.shot-hero img,.shot-hero video{display:block;width:100%;height:auto;border-radius:10px;border:1px solid rgba(255,255,255,.25);box-shadow:0 18px 40px rgba(0,20,60,.35);background:#fff}
 .fgrid{display:grid;gap:0;grid-template-columns:1fr;border-top:2px solid var(--tinta)}
 .fcard{padding:22px 2px;border-bottom:1px solid var(--linea);display:grid;gap:8px}
 .fcard p{color:var(--gris)}
