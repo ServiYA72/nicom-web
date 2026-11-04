@@ -205,6 +205,34 @@ document.addEventListener('click',function(e){
   var o=e.target.closest('[data-open]');if(o){abrirProducto(o.getAttribute('data-open'))}
 });
 
+/* Especificaciones ordenadas: abre los grupos anidados (ej. "caracteristicas"), no repite datos y oculta lo que ya se ve arriba (Ref/SKU). */
+function especsLimpias(e){
+  var filas=[];
+  function mayus(t){t=String(t).replace(/_/g,' ').trim();return t.charAt(0).toUpperCase()+t.slice(1)}
+  function texto(v){return Array.isArray(v)?v.filter(function(x){return x!=null&&x!==''}).join(', '):String(v).trim()}
+  function objeto(v){
+    if(v&&typeof v==='object'&&!Array.isArray(v))return v;
+    if(typeof v==='string'&&/^\s*\{[\s\S]*\}\s*$/.test(v)){try{var o=JSON.parse(v);if(o&&typeof o==='object')return o}catch(_){}}
+    return null;
+  }
+  function agregar(k,v,prof){
+    if(v==null||v==='')return;
+    var o=objeto(v);
+    if(o&&prof<3){Object.keys(o).forEach(function(c){agregar(c,o[c],prof+1)});return}
+    if(typeof v==='object'&&!Array.isArray(v))return;
+    var t=texto(v);if(t)filas.push([mayus(k),t]);
+  }
+  if(Array.isArray(e))e.forEach(function(x){if(x&&typeof x==='object')agregar(x.nombre||x.clave||x.key||'',x.valor!=null?x.valor:x.value,0);else if(x!=null&&x!=='')filas.push(['',String(x)])});
+  else if(e&&typeof e==='object')Object.keys(e).forEach(function(k){agregar(k,e[k],0)});
+  var visto={},fin=[];
+  filas.forEach(function(f){
+    var c=f[0].toLowerCase();
+    if(c==='sku'||c==='ref'||c==='referencia'||c==='código'||c==='codigo')return;
+    var k=c+'|'+f[1].toLowerCase();if(visto[k])return;visto[k]=1;fin.push(f);
+  });
+  return fin.slice(0,20);
+}
+
 /* ===== Detalle de producto ===== */
 function abrirProducto(id){
   var d=$('#dlgProd'),b=$('#prodBody');
@@ -215,12 +243,8 @@ function abrirProducto(id){
     var q=rows[0];guardar([q]);
     var fotos=(Array.isArray(q.fotos_todas)?q.fotos_todas:[]).map(okUrl).filter(Boolean);
     if(!fotos.length&&okUrl(q.imagen_url))fotos=[okUrl(q.imagen_url)];
-    var sp='';var e=q.especificaciones;
-    if(e&&typeof e==='object'){
-      var pares=Array.isArray(e)?e.map(function(x){return typeof x==='object'&&x?[x.nombre||x.clave||x.key||'',x.valor||x.value||'']:['',String(x)]}):Object.keys(e).map(function(k){return[k,typeof e[k]==='object'?JSON.stringify(e[k]):e[k]]});
-      pares=pares.filter(function(x){return x[1]!==''&&x[1]!=null}).slice(0,12);
-      if(pares.length)sp='<div class="spec">'+pares.map(function(x){return'<div><span>'+esc(x[0])+'</span><span>'+esc(x[1])+'</span></div>'}).join('')+'</div>';
-    }
+    var sp='';var pares=especsLimpias(q.especificaciones);
+    if(pares.length)sp='<div class="spec">'+pares.map(function(x){return'<div><span>'+esc(x[0])+'</span><span>'+esc(x[1])+'</span></div>'}).join('')+'</div>';
     var sin=!(q.stock>0);
     b.innerHTML='<button class="x" data-close aria-label="Cerrar">×</button><h2>'+esc(limpio(q.nombre))+'</h2>'
      +'<div class="big" id="big">'+(fotos[0]?'<img src="'+esc(fotos[0])+'" alt="'+esc(limpio(q.nombre))+'">':PH)+'</div>'
