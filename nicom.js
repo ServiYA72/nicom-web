@@ -247,7 +247,11 @@ function descripcionIA(t){
     /* si lo que queda sigue siendo texto de Mercado Libre (la IA aún no generó descripción), no se muestra nada */
     if(ml.test(t)||/^(RETIRO PERSONAL|DELIVERY|MERCADO ENV)/i.test(t)||t===t.toUpperCase())return '';
   }
-  return t;
+  return limpiarRestosIA(t);
+}
+/* Quita restos del editor del Dashboard que a veces quedan pegados dentro del texto (ej. "a trav(tala o bórrala como quieras) ---)és"). */
+function limpiarRestosIA(t){
+  return String(t).replace(/\(?\s*edítala o bórrala como quieras\)\s*---/gi,'').replace(/tala o bórrala como quieras\)\s*---/gi,'').replace(/-{3}\s*Sugerencia de la IA\s*-{0,3}/gi,'').replace(/[ \t]{2,}/g,' ').trim();
 }
 
 /* ===== Detalle de producto ===== */
