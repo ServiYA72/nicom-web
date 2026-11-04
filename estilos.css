@@ -107,7 +107,7 @@ header.top{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px so
 .card .btn{width:100%;min-height:42px;font-size:14px;padding:0 8px;white-space:normal;margin-top:10px}
 /* tienda */
 .tools{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
-.search{display:flex;gap:8px}
+.search{display:flex;gap:8px}.search input{flex:1;min-width:0}
 .search input,.f input,.f select,.f textarea,.co input,#selCat{font:inherit;width:100%;min-height:48px;border:1px solid #AEB8C6;border-radius:6px;padding:0 14px;background:#fff;color:var(--tinta)}
 .f textarea{padding:12px 14px;min-height:96px;resize:vertical}
 .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin}
@@ -210,15 +210,21 @@ dialog .x{position:absolute;right:6px;top:6px}
 .desc{font-size:14px;color:#3C4757;margin-top:12px;white-space:pre-line}
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--tinta);color:#fff;padding:10px 18px;border-radius:6px;z-index:90;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
 .toast.on{opacity:1}
-@media(min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}.indice{grid-template-columns:1fr 1fr}.tools{flex-direction:row;align-items:center}.tools .search{flex:1}}
+@media(min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}.indice{grid-template-columns:1fr 1fr}.tools{flex-direction:row;align-items:center}.tools .search{flex:1;min-width:0}.tools #selCat{width:auto;flex:0 0 240px}}
 @media(min-width:900px){h1{font-size:64px}h2{font-size:38px}h3{font-size:22px}body{font-size:17px}section{padding:68px 0}.hero{padding:72px 0 84px}.hero-g{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:56px;align-items:center}.menu{display:flex}.burger,.mmenu{display:none!important}.nav .btn-verde{display:inline-flex}.grid{grid-template-columns:repeat(4,1fr)}.dos{grid-template-columns:1fr 1fr;gap:64px;align-items:start}.fila{grid-template-columns:260px 1fr auto;gap:32px;align-items:baseline}.fila .btn{margin-top:0}.pasos{grid-template-columns:repeat(3,1fr);border-top:2px solid var(--tinta)}.paso{border-bottom:0;padding:22px 24px 8px 0}.paso:before{position:static;display:block;margin-bottom:8px}.indice{grid-template-columns:1fr 1fr 1fr}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 .menu a[aria-current=page]{border-color:var(--verde)}.mmenu a[aria-current=page]{font-weight:700}
-section.cab{padding:34px 0 26px;background:var(--banda);border-bottom:1px solid var(--linea)}
-.cab h1{font-size:clamp(30px,6vw,46px)}.cab p{color:var(--gris);margin-top:10px;max-width:640px}
+section.cab{padding:34px 0 30px;background:var(--azul);color:#fff}
+.cab h1{font-size:clamp(30px,6vw,46px);color:#fff}.cab p{color:#D7E3F7;margin-top:10px;max-width:640px}
+.cab-g{display:grid;gap:22px;align-items:center}
+.cab-datos{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 22px}
+.cab-datos li{display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px;color:#fff}
+.cab-datos svg{width:18px;height:18px;flex:none;fill:none;stroke:#3DDC84;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.cab-wa{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:18px;display:grid;gap:10px;max-width:360px}
+.cab-wa b{font-size:17px;line-height:1.25}.cab-wa p{margin:0;font-size:14px}.cab-wa .btn{width:100%}
 section.cta{padding:40px 0}
 .azul .pago{color:var(--tinta)}
-@media(min-width:900px){section.cab{padding:48px 0 36px}section.cta{padding:56px 0}}
+@media(min-width:900px){.cab-g{grid-template-columns:1fr auto;gap:48px}section.cab{padding:48px 0 40px}section.cta{padding:56px 0}}
 /* ===== Nicom Punto (página propia) ===== */
 .mini{font-size:14px;color:#B9CBEA;margin-top:14px}
 .shot-hero img,.shot-hero video{display:block;width:100%;height:auto;border-radius:10px;border:1px solid rgba(255,255,255,.25);box-shadow:0 18px 40px rgba(0,20,60,.35);background:#fff}
