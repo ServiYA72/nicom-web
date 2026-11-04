@@ -236,7 +236,9 @@ function especsLimpias(e){
 /* Descripción: solo el texto que generó la IA. En la publicación, primero va el texto de Mercado Libre (ATENCIÓN, garantía, ubicación, condiciones, horario, pagos, despacho, todo separado por líneas de asteriscos) y la descripción de la IA va después de la última línea de asteriscos. */
 function descripcionIA(t){
   t=String(t==null?'':t).trim();if(!t)return '';
-  var ml=/(PRECIO PUBLICADO|HORARIO DE TRABAJO|SOMOS OFICINA|OFRECEMOS GARANT|M[ÉE]TODOS DE (PAGO|DESPACHO)|\*{4,} ?ATENCI)/i;
+  var mk=t.lastIndexOf('--- Sugerencia de la IA');
+  if(mk>=0){var nl=t.indexOf('---',mk+5);t=t.slice(nl>=0?t.indexOf('\n',nl)+1||t.length:t.length).trim();if(!t)return ''}
+  var ml=/(PRECIO PUBLICADO|HORARIO DE TRABAJO|SOMOS OFICINA|OFRECEMOS GARANT|M[ÉE]TODOS DE (PAGO|DESPACHO)|\*{4,} ?ATENCI)/;
   if(ml.test(t)){
     var re=/\*{5,}/g,m,fin=-1;
     while((m=re.exec(t)))fin=m.index+m[0].length;
