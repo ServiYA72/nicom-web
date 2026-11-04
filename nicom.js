@@ -233,6 +233,21 @@ function especsLimpias(e){
   return fin.slice(0,20);
 }
 
+/* Descripción: solo el texto que generó la IA. En la publicación, primero va el texto de Mercado Libre (ATENCIÓN, garantía, ubicación, condiciones, horario, pagos, despacho, todo separado por líneas de asteriscos) y la descripción de la IA va después de la última línea de asteriscos. */
+function descripcionIA(t){
+  t=String(t==null?'':t).trim();if(!t)return '';
+  var ml=/(PRECIO PUBLICADO|HORARIO DE TRABAJO|SOMOS OFICINA|OFRECEMOS GARANT|M[ÉE]TODOS DE (PAGO|DESPACHO)|\*{4,} ?ATENCI)/i;
+  if(ml.test(t)){
+    var re=/\*{5,}/g,m,fin=-1;
+    while((m=re.exec(t)))fin=m.index+m[0].length;
+    if(fin<0)return '';
+    t=t.slice(fin).trim();
+    /* si lo que queda sigue siendo texto de Mercado Libre (la IA aún no generó descripción), no se muestra nada */
+    if(ml.test(t)||/^(RETIRO PERSONAL|DELIVERY|MERCADO ENV)/i.test(t)||t===t.toUpperCase())return '';
+  }
+  return t;
+}
+
 /* ===== Detalle de producto ===== */
 function abrirProducto(id){
   var d=$('#dlgProd'),b=$('#prodBody');
@@ -250,7 +265,7 @@ function abrirProducto(id){
      +'<div class="big" id="big">'+(fotos[0]?'<img src="'+esc(fotos[0])+'" alt="'+esc(limpio(q.nombre))+'">':PH)+'</div>'
      +(fotos.length>1?'<div class="gal">'+fotos.map(function(f){return'<img src="'+esc(f)+'" alt="" loading="lazy" data-foto="'+esc(f)+'">'}).join('')+'</div>':'')
      +'<div class="price" style="margin-top:14px">'+usd(q.precio_efectivo_usd)+'</div><div class="iva">+ IVA'+(q.precio_bs?' · '+bs(q.precio_bs):'')+(q.sku?' · Ref: '+esc(q.sku):'')+'</div>'
-     +(q.descripcion?'<div class="desc">'+esc(String(q.descripcion).slice(0,900))+'</div>':'')+sp
+     +(function(d){return d?'<div class="desc">'+esc(d.slice(0,900))+'</div>':''})(descripcionIA(q.descripcion))+sp
      +(sin?'<a class="btn btn-verde" style="width:100%;margin-top:16px" target="_blank" rel="noopener" href="'+esc(waUrl('Hola Nicom System, quiero consultar disponibilidad de: '+q.nombre.slice(0,120)))+'">Consultar disponibilidad</a>'
           :'<button class="btn btn-azul" style="width:100%;margin-top:16px" data-add="'+esc(q.id)+'" data-cerrar>Agregar al pedido</button>');
     var url=location.pathname+'?producto='+encodeURIComponent(id);try{history.replaceState(null,'',url)}catch(_){}
