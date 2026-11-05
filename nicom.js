@@ -21,15 +21,14 @@ function waUrl(t){return 'https://wa.me/'+CFG.wa+'?text='+encodeURIComponent(t)}
 function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2200)}
 /* Nombre legible: quita códigos [entre corchetes] y pasa MAYÚSCULAS a minúsculas, sin tocar la base de datos */
 var MIN={de:1,del:1,con:1,para:1,y:1,en:1,la:1,el:1,los:1,las:1,por:1,a:1,o:1,un:1,una:1};
-/* Descripción: la base trae el texto de Mercado Libre con un bloque fijo (ATENCIÓN, condiciones, horario, ubicación).
-   Aquí se corta desde ese bloque; si no queda texto propio del producto, no se muestra descripción. */
-function descLimpia(t){
-  t=String(t==null?'':t).replace(/\r/g,'');
-  var m=t.search(/\*{4,}|ATENCI[ÓO]N|PRECIO PUBLICADO|SOMOS OFICINA|CONDICIONES\b|HORARIO DE TRABAJO|UBICACI[ÓO]N\s*\*/i);
-  if(m>=0)t=t.slice(0,m);
-  t=t.replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
-  return t.length<25?'':t.slice(0,900);
-}
+/* Características: la base ya entrega solo las públicas ({marca, caracteristicas}) y la descripción solo de la IA.
+   Aquí únicamente se ordenan para que se lean como ficha técnica. */
+var ORDEN_ESPEC=['marca','modelo','procesador','memoria ram','almacenamiento','capacidad de almacenamiento','capacidad','tipo','factor de forma','interfaz','buffer','pantalla','tamaño de pantalla','resolución','tasa de refresco','sistema operativo','voltaje','protección','tomas de corriente','color','teclado','accesorios incluidos'];
+function paresEspec(e){
+  var c=e&&typeof e==='object'?e.caracteristicas:null;if(!c||typeof c!=='object')return[];
+  var p=Object.keys(c).map(function(k){return[k,String(c[k]==null?'':c[k]).trim()]}).filter(function(x){return x[0]&&x[1]});
+  p.sort(function(a,b){var i=ORDEN_ESPEC.indexOf(a[0].toLowerCase()),j=ORDEN_ESPEC.indexOf(b[0].toLowerCase());i=i<0?99:i;j=j<0?99:j;return i-j||a[0].localeCompare(b[0],'es')});
+  return p.slice(0,14)}
 function limpio(n){
   n=String(n==null?'':n).replace(/\s*\[[^\]]*\]\s*/g,' ').replace(/\s+/g,' ').trim();
   var L=n.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ]/g,'');
@@ -211,18 +210,14 @@ function abrirProducto(id){
     var q=rows[0];guardar([q]);
     var fotos=(Array.isArray(q.fotos_todas)?q.fotos_todas:[]).map(okUrl).filter(Boolean);
     if(!fotos.length&&okUrl(q.imagen_url))fotos=[okUrl(q.imagen_url)];
-    var sp='';var e=q.especificaciones;
-    if(e&&typeof e==='object'){
-      var pares=Array.isArray(e)?e.map(function(x){return typeof x==='object'&&x?[x.nombre||x.clave||x.key||'',x.valor||x.value||'']:['',String(x)]}):Object.keys(e).map(function(k){return[k,typeof e[k]==='object'?JSON.stringify(e[k]):e[k]]});
-      pares=pares.filter(function(x){return x[1]!==''&&x[1]!=null}).slice(0,12);
-      if(pares.length)sp='<div class="spec">'+pares.map(function(x){return'<div><span>'+esc(x[0])+'</span><span>'+esc(x[1])+'</span></div>'}).join('')+'</div>';
-    }
+    var pares=paresEspec(q.especificaciones),sp='';
+    if(pares.length)sp='<h3 class="spec-t">Características</h3><div class="spec">'+pares.map(function(x){return'<div><span>'+esc(x[0])+'</span><span>'+esc(x[1])+'</span></div>'}).join('')+'</div>';
     var sin=!(q.stock>0);
     b.innerHTML='<button class="x" data-close aria-label="Cerrar">×</button><h2>'+esc(limpio(q.nombre))+'</h2>'
      +'<div class="big" id="big">'+(fotos[0]?'<img src="'+esc(fotos[0])+'" alt="'+esc(limpio(q.nombre))+'">':PH)+'</div>'
      +(fotos.length>1?'<div class="gal">'+fotos.map(function(f){return'<img src="'+esc(f)+'" alt="" loading="lazy" data-foto="'+esc(f)+'">'}).join('')+'</div>':'')
      +'<div class="price" style="margin-top:14px">'+usd(q.precio_efectivo_usd)+'</div><div class="iva">+ IVA'+(q.sku?' · Ref: '+esc(q.sku):'')+'</div>'
-     +(descLimpia(q.descripcion)?'<div class="desc">'+esc(descLimpia(q.descripcion))+'</div>':'')+sp
+     +(q.descripcion?'<div class="desc">'+esc(String(q.descripcion).slice(0,900))+'</div>':'')+sp
      +(sin?'<a class="btn btn-verde" style="width:100%;margin-top:16px" target="_blank" rel="noopener" href="'+esc(waUrl('Hola Nicom System, quiero consultar disponibilidad de: '+q.nombre.slice(0,120)))+'">Consultar disponibilidad</a>'
           :'<button class="btn btn-azul" style="width:100%;margin-top:16px" data-add="'+esc(q.id)+'" data-cerrar>Agregar al pedido</button>');
     var url=location.pathname+'?producto='+encodeURIComponent(id);try{history.replaceState(null,'',url)}catch(_){}
