@@ -29,7 +29,7 @@ var t=m[location.hash];if(!t)return;var p=t.split('#');location.replace(p[0]+loc
 </script>
 </head>
 <body>
-<div class="franja"><div class="wrap" id="franja">Precios en dólares, sin IVA. Caracas, Venezuela.</div></div>
+<div class="franja"><div class="wrap" id="franja">Desde 2007 en Caracas · Precios en dólares, sin IVA</div></div>
 
 <!-- ===== ENCABEZADO ===== -->
 <header class="top">
@@ -86,9 +86,9 @@ var t=m[location.hash];if(!t)return;var p=t.split('#');location.replace(p[0]+loc
 <!-- ===== GARANTÍA Y SERVICIO ===== -->
 <section class="ben" aria-label="Por qué comprar en Nicom System">
   <div class="wrap ben-g">
+    <div class="b"><svg class="i" viewBox="0 0 24 24"><rect x="3.500" y="5" width="17" height="15" rx="2"/><path d="M3.500 10h17M8 3v4M16 3v4M9 15l2 2 4-4"/></svg><div><strong>Desde 2007</strong><span>Empresa operativa en Caracas</span></div></div>
     <div class="b"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><div><strong>Garantía</strong><span>En todos los equipos</span></div></div>
     <div class="b"><svg class="i" viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.800"/><circle cx="17" cy="18" r="1.800"/></svg><div><strong>Delivery y envíos</strong><span>Caracas por zonas y courier nacional</span></div></div>
-    <div class="b"><svg class="i" viewBox="0 0 24 24"><rect x="2.500" y="5" width="19" height="14" rx="2"/><path d="M2.500 10h19M7 15h4"/></svg><div><strong>Confirmamos tu pago</strong><span>Y tu pedido, por WhatsApp</span></div></div>
     <div class="b"><svg class="i" viewBox="0 0 24 24"><path d="M14.500 6.500a4 4 0 0 0-5 5L3 18l3 3 6.500-6.500a4 4 0 0 0 5-5l-2.500 2.500-2.500-.5-.5-2.500z"/></svg><div><strong>Instalación y soporte</strong><span>En Caracas, con cotización</span></div></div>
   </div>
 </section>
@@ -170,7 +170,7 @@ var t=m[location.hash];if(!t)return;var p=t.split('#');location.replace(p[0]+loc
 
 <footer>
   <div class="wrap">
-    <div class="fbrand"><img src="img/logo-nicom.png" alt="" width="34" height="34" loading="lazy">Nicom System C.A.</div>
+    <div class="fbrand"><img src="img/logo-nicom.png" alt="" width="34" height="34" loading="lazy">Nicom System C.A. · desde 2007</div>
     RIF J-29487693-5 · WhatsApp +58 424-234-2204<br>
     Av. Anauco, San Bernardino, Edf. La Floridiana, Municipio Libertador, Caracas, CP 1011<br>
     <span style="font-size:13px">Precios sin IVA. El IVA va en factura aparte.</span> · <a href="https://catalogo.nicomsystem.com/login.html" rel="nofollow">Acceso interno</a>
@@ -190,7 +190,7 @@ var t=m[location.hash];if(!t)return;var p=t.split('#');location.replace(p[0]+loc
     <div class="tot"><span>Total</span><span id="totUsd">$0.00</span></div>
     <div class="iva" id="totBs" style="margin-top:2px"></div>
     <div class="iva">Precios sin IVA. El IVA va en factura aparte.</div>
-    <button class="btn btn-azul" id="btnPagar">Continuar con el pedido</button>
+    <button class="btn btn-azul" id="btnPagar">Solicitar mi pedido</button>
     <button class="btn btn-borde" id="btnVaciar" style="min-height:40px;font-size:14px">Vaciar pedido</button>
   </div>
 </aside>
@@ -220,8 +220,8 @@ var t=m[location.hash];if(!t)return;var p=t.split('#');location.replace(p[0]+loc
     <label><input type="radio" name="metodo" value="Binance / USDT">Binance P2P / USDT</label>
     <label><input type="radio" name="metodo" value="Efectivo">Efectivo</label>
   </div>
-  <p class="iva"><strong>Primero confirmamos la disponibilidad</strong> de tu pedido y el tiempo de entrega. Luego te enviamos el monto exacto y los datos para pagar, y confirmamos tu pago. Aún no se cobra nada.</p>
-  <button class="btn btn-verde" id="btnEnviar" style="width:100%;margin-top:14px;white-space:normal"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg>Enviar pedido por WhatsApp</button>
+  <p class="iva"><strong>No pagas ahora.</strong> Te respondemos por WhatsApp con la disponibilidad, el tiempo de entrega y el monto exacto en Bs. a la tasa BCV del día. Solo pagas cuando tú lo confirmes.</p>
+  <button class="btn btn-verde" id="btnEnviar" style="width:100%;margin-top:14px;white-space:normal"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg>Enviar solicitud por WhatsApp</button>
 </div></dialog>
 
 <!-- ===== MODAL DE PRODUCTO ===== -->
@@ -229,6 +229,6 @@ var t=m[location.hash];if(!t)return;var p=t.split('#');location.replace(p[0]+loc
 
 <div class="toast" id="toast" role="status"></div>
 
-<script src="nicom.js?v=4" defer></script>
+<script src="nicom.js?v=5" defer></script>
 </body>
 </html>

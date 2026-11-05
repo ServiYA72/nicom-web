@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="estilos.css?v=5">
 </head>
 <body>
-<div class="franja"><div class="wrap" id="franja">Precios en dólares, sin IVA. Caracas, Venezuela.</div></div>
+<div class="franja"><div class="wrap" id="franja">Desde 2007 en Caracas · Precios en dólares, sin IVA</div></div>
 
 <!-- ===== ENCABEZADO ===== -->
 <header class="top">
@@ -45,7 +45,7 @@
 
 <main id="inicio">
 
-<section class="cab"><div class="wrap"><h1>Nosotros y contacto</h1><p>Quiénes somos, cómo comprar y cómo escribirnos.</p></div></section>
+<section class="cab"><div class="wrap"><h1>Nosotros y contacto</h1><p>Desde 2007 en Caracas. Quiénes somos, cómo comprar y cómo escribirnos.</p></div></section>
 <!-- ===== NOSOTROS ===== -->
 <section id="nosotros">
   <div class="wrap dos">
@@ -53,9 +53,10 @@
       <!-- Si tienes el logo horizontal original "Nicom System", guárdalo en img/ y reemplaza este bloque por <img src="img/TU-ARCHIVO.png" alt="Nicom System C.A."> -->
       <div class="lockup"><img src="img/logo-nicom.png" alt="Logo de Nicom System" width="64" height="64" loading="lazy"><div><span class="lk1">NICOM SYSTEM</span><span class="lk2">Caracas, Venezuela</span></div></div>
       <h2>Nicom System C.A.</h2>
-      <p style="color:var(--gris);margin-top:12px">Empresa venezolana con sede en Caracas, dedicada a equipos y servicios de tecnología, seguridad y energía para empresas, comercios y hogares.</p>
+      <p style="color:var(--gris);margin-top:12px">Empresa venezolana fundada en 2007 y operativa desde entonces en Caracas, dedicada a equipos y servicios de tecnología, seguridad y energía para empresas, comercios y hogares.</p>
     </div>
     <ul class="lista" style="margin-top:0">
+      <li>Operando desde 2007</li>
       <li>RIF J-29487693-5</li>
       <li>Garantía y soporte directo por WhatsApp</li>
       <li>Facturación fiscal (IVA aparte)</li>
@@ -69,7 +70,7 @@
     <div class="sec-head"><h2>Comprar o cotizar es sencillo</h2></div>
     <div class="pasos">
       <div class="paso"><h3>Elige o cuéntanos qué necesitas</h3><p>Arma tu pedido en la tienda o escríbenos por WhatsApp.</p></div>
-      <div class="paso"><h3>Confirmamos y pagas</h3><p>Te enviamos el monto exacto y pagas por el método que prefieras.</p></div>
+      <div class="paso"><h3>Te confirmamos y pagas</h3><p>Te respondemos con disponibilidad, entrega y monto exacto. Pagas solo cuando tú lo confirmes.</p></div>
       <div class="paso"><h3>Te lo entregamos o lo instalamos</h3><p>Envío o instalación con garantía.</p></div>
     </div>
   </div>
@@ -86,9 +87,9 @@
   <div class="wrap">
     <div class="sec-head"><h2>Preguntas frecuentes</h2></div>
     <div class="faqs">
-      <details class="faq"><summary>¿Cómo pago?</summary><p>Pago Móvil, transferencia, Zelle, Binance/USDT o efectivo. Te damos el monto exacto en Bs. o en $.</p></details>
+      <details class="faq"><summary>¿Cómo pago?</summary><p>Pago Móvil, transferencia, Zelle, Binance/USDT o efectivo. Te damos el monto exacto en $ o en Bs. a la tasa BCV del día.</p></details>
       <details class="faq"><summary>¿Hacen envíos?</summary><p>Sí. Delivery en Caracas por zonas y envío nacional por courier. Coordinamos el costo y el tiempo por WhatsApp.</p></details>
-      <details class="faq"><summary>¿Cuándo pago?</summary><p>Primero confirmamos que el producto esté disponible y cuándo te llega. Después pagas, y te confirmamos tu pago por WhatsApp.</p></details>
+      <details class="faq"><summary>¿Cuándo pago?</summary><p>No pagas por adelantado. Primero te confirmamos disponibilidad, tiempo de entrega y monto por WhatsApp. Después pagas, y te confirmamos tu pago.</p></details>
       <details class="faq"><summary>¿Tienen garantía?</summary><p>Sí, todos los equipos la incluyen.</p></details>
       <details class="faq"><summary>¿Dan factura?</summary><p>Sí. El IVA se factura aparte.</p></details>
       <details class="faq"><summary>¿Instalan?</summary><p>Sí, en Caracas y con cotización previa.</p></details>
@@ -120,7 +121,7 @@
 
 <footer>
   <div class="wrap">
-    <div class="fbrand"><img src="img/logo-nicom.png" alt="" width="34" height="34" loading="lazy">Nicom System C.A.</div>
+    <div class="fbrand"><img src="img/logo-nicom.png" alt="" width="34" height="34" loading="lazy">Nicom System C.A. · desde 2007</div>
     RIF J-29487693-5 · WhatsApp +58 424-234-2204<br>
     Av. Anauco, San Bernardino, Edf. La Floridiana, Municipio Libertador, Caracas, CP 1011<br>
     <span style="font-size:13px">Precios sin IVA. El IVA va en factura aparte.</span> · <a href="https://catalogo.nicomsystem.com/login.html" rel="nofollow">Acceso interno</a>
@@ -140,7 +141,7 @@
     <div class="tot"><span>Total</span><span id="totUsd">$0.00</span></div>
     <div class="iva" id="totBs" style="margin-top:2px"></div>
     <div class="iva">Precios sin IVA. El IVA va en factura aparte.</div>
-    <button class="btn btn-azul" id="btnPagar">Continuar con el pedido</button>
+    <button class="btn btn-azul" id="btnPagar">Solicitar mi pedido</button>
     <button class="btn btn-borde" id="btnVaciar" style="min-height:40px;font-size:14px">Vaciar pedido</button>
   </div>
 </aside>
@@ -170,8 +171,8 @@
     <label><input type="radio" name="metodo" value="Binance / USDT">Binance P2P / USDT</label>
     <label><input type="radio" name="metodo" value="Efectivo">Efectivo</label>
   </div>
-  <p class="iva"><strong>Primero confirmamos la disponibilidad</strong> de tu pedido y el tiempo de entrega. Luego te enviamos el monto exacto y los datos para pagar, y confirmamos tu pago. Aún no se cobra nada.</p>
-  <button class="btn btn-verde" id="btnEnviar" style="width:100%;margin-top:14px;white-space:normal"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg>Enviar pedido por WhatsApp</button>
+  <p class="iva"><strong>No pagas ahora.</strong> Te respondemos por WhatsApp con la disponibilidad, el tiempo de entrega y el monto exacto en Bs. a la tasa BCV del día. Solo pagas cuando tú lo confirmes.</p>
+  <button class="btn btn-verde" id="btnEnviar" style="width:100%;margin-top:14px;white-space:normal"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg>Enviar solicitud por WhatsApp</button>
 </div></dialog>
 
 <!-- ===== MODAL DE PRODUCTO ===== -->
@@ -179,6 +180,6 @@
 
 <div class="toast" id="toast" role="status"></div>
 
-<script src="nicom.js?v=4" defer></script>
+<script src="nicom.js?v=5" defer></script>
 </body>
 </html>

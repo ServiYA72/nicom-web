@@ -60,7 +60,7 @@ function cardHtml(p){
             :'<button class="btn btn-azul" data-add="'+esc(p.id)+'">Agregar al pedido</button>';
   return '<article class="card"><button class="card-img" data-open="'+esc(p.id)+'" aria-label="Ver detalle de '+esc(limpio(p.nombre))+'">'+(img?'<img src="'+esc(img)+'" alt="'+esc(limpio(p.nombre))+'" loading="lazy" onerror="this.outerHTML=PH">':PH)+tag+'</button>'
    +'<div class="card-b"><span class="cat">'+esc(p.categoria||'')+'</span><h3 data-open="'+esc(p.id)+'">'+esc(limpio(p.nombre))+'</h3>'
-   +'<div class="price">'+usd(p.precio_efectivo_usd)+anterior+'</div><div class="iva">+ IVA'+(p.precio_bs?' · '+bs(p.precio_bs):'')+'</div>'+btn+'</div></article>';
+   +'<div class="price">'+usd(p.precio_efectivo_usd)+anterior+'</div><div class="iva">+ IVA</div>'+btn+'</div></article>';
 }
 
 /* ===== Hero: lista de productos que bajaron de precio + tasa usada ===== */
@@ -74,12 +74,8 @@ function pintarV(){
   $('#vitN').textContent=(V.i+1)+' de '+V.d.length;
   $('#vitNom').textContent=limpio(p.nombre);
   $('#vitPrecio').innerHTML=usd(p.precio_efectivo_usd)+((p.bajo_de_precio&&p.precio_anterior_usd)?'<s>'+usd(p.precio_anterior_usd)+'</s>':'');
-  $('#vitIva').textContent='+ IVA'+(p.precio_bs?' · '+bs(p.precio_bs):'');
+  $('#vitIva').textContent='+ IVA';
   $('#vitAdd').setAttribute('data-add',p.id);
-}
-function setTasa(p){
-  if(p&&p.precio_bs&&Number(p.precio_efectivo_usd)>0){var t=Number(p.precio_bs)/Number(p.precio_efectivo_usd);
-    $('#franja').textContent='Precios en dólares, sin IVA. Los bolívares se calculan a Bs. '+t.toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})+' por dólar.'}
 }
 function cargarVitrina(){
   api('vista_catalogo_publico?select='+LIST+'&tenant_slug=eq.'+CFG.slug+'&tiene_fotos=eq.true&stock=gt.0&order=bajo_de_precio.desc,precio_efectivo_usd.desc&limit=6')
@@ -87,7 +83,7 @@ function cargarVitrina(){
   .then(function(d){
     d=d.filter(function(p){return okUrl(p.imagen_url)});
     if(!d.length)return;
-    guardar(d);V.d=d;V.i=0;pintarV();setTasa(d[0]);
+    guardar(d);V.d=d;V.i=0;pintarV();
     $('#vit').hidden=false;$('#listaP').hidden=true;
     var multi=d.length>1;$('#vitPrev').hidden=$('#vitNext').hidden=!multi;
   }).catch(function(){});
@@ -106,16 +102,7 @@ function cargarBajaron(){
       return '<button class="pl" data-open="'+esc(p.id)+'"><span class="pn">'+esc(limpio(p.nombre))+'</span><span class="pp"><s>'+usd(p.precio_anterior_usd||0)+'</s>'+usd(p.precio_efectivo_usd)+'</span></button>';
     }).join('');
     $('#listaP').hidden=!$('#vit').hidden;
-    var t=d.filter(function(p){return p.precio_bs&&Number(p.precio_efectivo_usd)>0})[0];
-    if(t){var tasa=Number(t.precio_bs)/Number(t.precio_efectivo_usd);
-      $('#franja').textContent='Precios en dólares, sin IVA. Los bolívares se calculan a Bs. '+tasa.toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})+' por dólar.'}
   }).catch(function(){});
-}
-
-/* ===== Tasa del día para la franja (páginas sin vitrina) ===== */
-function cargarTasa(){
-  api('vista_catalogo_publico?select=precio_bs,precio_efectivo_usd&tenant_slug=eq.'+CFG.slug+'&precio_bs=not.is.null&precio_efectivo_usd=gt.0&stock=gt.0&limit=1')
-  .then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){if(d&&d[0])setTasa(d[0])}).catch(function(){});
 }
 
 /* ===== Conteo de productos por categoría (índice) ===== */
@@ -205,55 +192,6 @@ document.addEventListener('click',function(e){
   var o=e.target.closest('[data-open]');if(o){abrirProducto(o.getAttribute('data-open'))}
 });
 
-/* Especificaciones ordenadas: abre los grupos anidados (ej. "caracteristicas"), no repite datos y oculta lo que ya se ve arriba (Ref/SKU). */
-function especsLimpias(e){
-  var filas=[];
-  function mayus(t){t=String(t).replace(/_/g,' ').trim();return t.charAt(0).toUpperCase()+t.slice(1)}
-  function texto(v){return Array.isArray(v)?v.filter(function(x){return x!=null&&x!==''}).join(', '):String(v).trim()}
-  function objeto(v){
-    if(v&&typeof v==='object'&&!Array.isArray(v))return v;
-    if(typeof v==='string'&&/^\s*\{[\s\S]*\}\s*$/.test(v)){try{var o=JSON.parse(v);if(o&&typeof o==='object')return o}catch(_){}}
-    return null;
-  }
-  function agregar(k,v,prof){
-    if(v==null||v==='')return;
-    var o=objeto(v);
-    if(o&&prof<3){Object.keys(o).forEach(function(c){agregar(c,o[c],prof+1)});return}
-    if(typeof v==='object'&&!Array.isArray(v))return;
-    var t=texto(v);if(t)filas.push([mayus(k),t]);
-  }
-  if(Array.isArray(e))e.forEach(function(x){if(x&&typeof x==='object')agregar(x.nombre||x.clave||x.key||'',x.valor!=null?x.valor:x.value,0);else if(x!=null&&x!=='')filas.push(['',String(x)])});
-  else if(e&&typeof e==='object')Object.keys(e).forEach(function(k){agregar(k,e[k],0)});
-  var visto={},fin=[];
-  filas.forEach(function(f){
-    var c=f[0].toLowerCase();
-    if(c==='sku'||c==='ref'||c==='referencia'||c==='código'||c==='codigo')return;
-    var k=c+'|'+f[1].toLowerCase();if(visto[k])return;visto[k]=1;fin.push(f);
-  });
-  return fin.slice(0,20);
-}
-
-/* Descripción: solo el texto que generó la IA. En la publicación, primero va el texto de Mercado Libre (ATENCIÓN, garantía, ubicación, condiciones, horario, pagos, despacho, todo separado por líneas de asteriscos) y la descripción de la IA va después de la última línea de asteriscos. */
-function descripcionIA(t){
-  t=String(t==null?'':t).trim();if(!t)return '';
-  var mk=t.lastIndexOf('--- Sugerencia de la IA');
-  if(mk>=0){var nl=t.indexOf('---',mk+5);t=t.slice(nl>=0?t.indexOf('\n',nl)+1||t.length:t.length).trim();if(!t)return ''}
-  var ml=/(PRECIO PUBLICADO|HORARIO DE TRABAJO|SOMOS OFICINA|OFRECEMOS GARANT|M[ÉE]TODOS DE (PAGO|DESPACHO)|\*{4,} ?ATENCI)/;
-  if(ml.test(t)){
-    var re=/\*{5,}/g,m,fin=-1;
-    while((m=re.exec(t)))fin=m.index+m[0].length;
-    if(fin<0)return '';
-    t=t.slice(fin).trim();
-    /* si lo que queda sigue siendo texto de Mercado Libre (la IA aún no generó descripción), no se muestra nada */
-    if(ml.test(t)||/^(RETIRO PERSONAL|DELIVERY|MERCADO ENV)/i.test(t)||t===t.toUpperCase())return '';
-  }
-  return limpiarRestosIA(t);
-}
-/* Quita restos del editor del Dashboard que a veces quedan pegados dentro del texto (ej. "a trav(tala o bórrala como quieras) ---)és"). */
-function limpiarRestosIA(t){
-  return String(t).replace(/\(?\s*edítala o bórrala como quieras\)\s*---/gi,'').replace(/tala o bórrala como quieras\)\s*---/gi,'').replace(/-{3}\s*Sugerencia de la IA\s*-{0,3}/gi,'').replace(/[ \t]{2,}/g,' ').trim();
-}
-
 /* ===== Detalle de producto ===== */
 function abrirProducto(id){
   var d=$('#dlgProd'),b=$('#prodBody');
@@ -264,14 +202,18 @@ function abrirProducto(id){
     var q=rows[0];guardar([q]);
     var fotos=(Array.isArray(q.fotos_todas)?q.fotos_todas:[]).map(okUrl).filter(Boolean);
     if(!fotos.length&&okUrl(q.imagen_url))fotos=[okUrl(q.imagen_url)];
-    var sp='';var pares=especsLimpias(q.especificaciones);
-    if(pares.length)sp='<div class="spec">'+pares.map(function(x){return'<div><span>'+esc(x[0])+'</span><span>'+esc(x[1])+'</span></div>'}).join('')+'</div>';
+    var sp='';var e=q.especificaciones;
+    if(e&&typeof e==='object'){
+      var pares=Array.isArray(e)?e.map(function(x){return typeof x==='object'&&x?[x.nombre||x.clave||x.key||'',x.valor||x.value||'']:['',String(x)]}):Object.keys(e).map(function(k){return[k,typeof e[k]==='object'?JSON.stringify(e[k]):e[k]]});
+      pares=pares.filter(function(x){return x[1]!==''&&x[1]!=null}).slice(0,12);
+      if(pares.length)sp='<div class="spec">'+pares.map(function(x){return'<div><span>'+esc(x[0])+'</span><span>'+esc(x[1])+'</span></div>'}).join('')+'</div>';
+    }
     var sin=!(q.stock>0);
     b.innerHTML='<button class="x" data-close aria-label="Cerrar">×</button><h2>'+esc(limpio(q.nombre))+'</h2>'
      +'<div class="big" id="big">'+(fotos[0]?'<img src="'+esc(fotos[0])+'" alt="'+esc(limpio(q.nombre))+'">':PH)+'</div>'
      +(fotos.length>1?'<div class="gal">'+fotos.map(function(f){return'<img src="'+esc(f)+'" alt="" loading="lazy" data-foto="'+esc(f)+'">'}).join('')+'</div>':'')
-     +'<div class="price" style="margin-top:14px">'+usd(q.precio_efectivo_usd)+'</div><div class="iva">+ IVA'+(q.precio_bs?' · '+bs(q.precio_bs):'')+(q.sku?' · Ref: '+esc(q.sku):'')+'</div>'
-     +(function(d){return d?'<div class="desc">'+esc(d.slice(0,900))+'</div>':''})(descripcionIA(q.descripcion))+sp
+     +'<div class="price" style="margin-top:14px">'+usd(q.precio_efectivo_usd)+'</div><div class="iva">+ IVA'+(q.sku?' · Ref: '+esc(q.sku):'')+'</div>'
+     +(q.descripcion?'<div class="desc">'+esc(String(q.descripcion).slice(0,900))+'</div>':'')+sp
      +(sin?'<a class="btn btn-verde" style="width:100%;margin-top:16px" target="_blank" rel="noopener" href="'+esc(waUrl('Hola Nicom System, quiero consultar disponibilidad de: '+q.nombre.slice(0,120)))+'">Consultar disponibilidad</a>'
           :'<button class="btn btn-azul" style="width:100%;margin-top:16px" data-add="'+esc(q.id)+'" data-cerrar>Agregar al pedido</button>');
     var url=location.pathname+'?producto='+encodeURIComponent(id);try{history.replaceState(null,'',url)}catch(_){}
@@ -306,7 +248,7 @@ function pintarC(){
     return '<div class="it"><div class="im">'+(x.img?'<img src="'+esc(x.img)+'" alt="">':PH)+'</div><div><div class="n">'+esc(limpio(x.nombre))+'</div><div class="q"><button data-q2="-1" data-i="'+i+'" aria-label="Menos">−</button><span>'+x.qty+'</span><button data-q2="1" data-i="'+i+'" aria-label="Más">+</button><button class="del" data-del="'+i+'">Quitar</button></div></div><strong>'+usd(x.precio*x.qty)+'</strong></div>';
   }).join('');
   $('#totUsd').textContent=usd(t.u);
-  $('#totBs').textContent=t.b?'≈ '+bs(t.b)+' (referencial, a la tasa del día)':'';
+  $('#totBs').textContent='Sin IVA. No pagas ahora: el monto en Bs. te lo damos al confirmar.';
 }
 $('#items').addEventListener('click',function(e){
   var q=e.target.closest('[data-q2]'),d=e.target.closest('[data-del]');
@@ -336,8 +278,8 @@ $('#btnEnviar').onclick=function(){
   $('#ePago').textContent='';
   var m=(document.querySelector('input[name=metodo]:checked')||{}).value||'';
   var t=totales();
-  var msg='Hola Nicom System, quiero este pedido (confirmen disponibilidad y entrega):\n'+C.map(function(x){return '• '+x.qty+' x '+x.nombre.slice(0,80)+' — '+usd(x.precio*x.qty)}).join('\n')
-    +'\n\nTotal: '+usd(t.u)+' (sin IVA)'+(t.b?'\nReferencia en Bs.: '+bs(t.b):'')+'\nMétodo de pago: '+m+'\nNombre: '+nom+'\nWhatsApp: '+tel+'\nEntrega: '+(ent==='courier'?'Envío nacional por courier':'Delivery en Caracas')+' — '+zona;
+  var msg='Hola Nicom System, quiero solicitar este pedido:\n'+C.map(function(x){return '• '+x.qty+' x '+x.nombre.slice(0,80)+' — '+usd(x.precio*x.qty)}).join('\n')
+    +'\n\nTotal: '+usd(t.u)+' (sin IVA)'+'\nMétodo de pago: '+m+'\nNombre: '+nom+'\nWhatsApp: '+tel+'\nEntrega: '+(ent==='courier'?'Envío nacional por courier':'Delivery en Caracas')+' — '+zona;
   try{fetch(CFG.url+'/functions/v1/registrar-lead-catalogo',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',apikey:CFG.key,Authorization:'Bearer '+CFG.key},
     body:JSON.stringify({tenant_slug:CFG.slug,items:C.map(function(x){return{producto_id:x.id,nombre:x.nombre,cantidad:x.qty,precio_efectivo_usd:x.precio}}),total_usd:t.u,mensaje:msg,origen:'web',cliente_nombre:nom,cliente_telefono:tel,metodo_pago:m,entrega_tipo:ent,entrega_zona:zona,vendedor_codigo:vendedor()})}).catch(function(){})}catch(_){}
   window.open(waUrl(msg),'_blank','noopener');
@@ -362,7 +304,7 @@ if($('#formContacto'))$('#formContacto').onsubmit=function(e){
 
 /* ===== Arranque ===== */
 pintarC();
-if($('#vit')){cargarVitrina();cargarBajaron()}else cargarTasa();
+if($('#vit')){cargarVitrina();cargarBajaron()}
 cargarConteos();cargarDestacados();
 if($('#gridTienda')){
   var qs0=new URLSearchParams(location.search),c0=qs0.get('cat'),q0=qs0.get('q');
