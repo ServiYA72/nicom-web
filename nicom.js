@@ -57,6 +57,41 @@ function api(path,extra){
   if(extra)for(var k in extra)h[k]=extra[k];
   return fetch(CFG.url+'/rest/v1/'+path,{headers:h});
 }
+/* ===== Precio claro: se muestra el "$ ref" (referencia) que se paga en Bs. a tasa BCV; con divisas/efectivo hay descuento ===== */
+var T={bcv:0,bin:0,fecha:'',fail:false};
+function refDe(n){return T.bcv&&T.bin?Math.ceil(Number(n)*T.bin/T.bcv*100-1e-9)/100:0}   /* $ ref (centavo hacia arriba) */
+function bsRef(r){return T.bcv?Math.round(r*T.bcv*100)/100:0}                              /* Bs. a pagar = $ ref x tasa BCV (cuadra exacto) */
+function pctDe(d,r){return r>0?Math.round((1-d/r)*100):0}
+function esMetodoBs(m){return /m[oó]vil|transfer/i.test(m||'')}
+function textoBs(n,modo,r){
+  var d=Number(n);
+  if(modo==='ant')return (T.bcv||T.fail)?'<s>'+usd(T.bcv?refDe(d):d)+'</s>':'';
+  if(modo==='ref')return T.bcv?usd(r!=null?r:refDe(d)):(T.fail?usd(d):'');
+  if(!T.bcv||!T.bin)return '';
+  r=r!=null?r:refDe(d);var b=bsRef(r),a=pctDe(d,r);
+  if(modo==='card')return 'Divisas o efectivo: <strong>'+usd(d)+'</strong>'+(a>0?' (−'+a+'%)':'')+'<br>En Bs. (tasa BCV): '+bs(b);
+  return '<strong>En bolívares</strong> (Pago Móvil o transferencia): '+usd(r)+' × tasa BCV '+bs(T.bcv)+' = <strong>'+bs(b)+'</strong> + IVA.<br><strong>Pagando en divisas o efectivo</strong> (Zelle, Binance, efectivo): <strong>'+usd(d)+'</strong> + IVA'+(a>0?' — ahorras '+usd(r-d)+' ('+a+'%)':'')+'.';
+}
+function pintarBs(){
+  if(!T.bcv&&!T.fail)return;
+  var k=T.fecha+'|'+T.bcv+'|'+T.fail;
+  $$('[data-bs]').forEach(function(e){
+    if(e.getAttribute('data-ok')===k)return;
+    e.innerHTML=textoBs(e.getAttribute('data-bs'),e.getAttribute('data-modo'));
+    e.setAttribute('data-ok',k);
+  });
+}
+function cargarTasas(){
+  api('vista_catalogo_tasas?select=fecha,tasa_bcv,tasa_binance').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){
+    if(!d||!d[0]){T.fail=true;pintarBs();return}
+    T.bcv=parseFloat(d[0].tasa_bcv)||0;T.bin=parseFloat(d[0].tasa_binance)||0;T.fecha=String(d[0].fecha||'');
+    if(!T.bcv||!T.bin){T.bcv=T.bin=0;T.fail=true}
+    pintarBs();if(typeof pintarC==='function')pintarC();try{resumenPago()}catch(_){}
+  }).catch(function(){T.fail=true;pintarBs();try{pintarC()}catch(_){}});
+}
+try{new MutationObserver(function(){pintarBs()}).observe(document.body,{childList:true,subtree:true})}catch(_){}
+setTimeout(function(){if(!T.bcv&&!T.fail){T.fail=true;pintarBs();try{pintarC()}catch(_){}}},6000);
+cargarTasas();
 var P={};
 function guardar(arr){arr.forEach(function(p){P[p.id]=Object.assign(P[p.id]||{},p)})}
 
@@ -64,12 +99,12 @@ function guardar(arr){arr.forEach(function(p){P[p.id]=Object.assign(P[p.id]||{},
 function cardHtml(p){
   var img=okUrl(p.imagen_url),sin=!(p.stock>0);
   var tag=sin?'<span class="tag gris">Agotado</span>':(p.bajo_de_precio?'<span class="tag">Bajó de precio</span>':'');
-  var anterior=(p.bajo_de_precio&&p.precio_anterior_usd)?'<s>'+usd(p.precio_anterior_usd)+'</s>':'';
+  var anterior=(p.bajo_de_precio&&p.precio_anterior_usd)?'<span data-modo="ant" data-bs="'+Number(p.precio_anterior_usd)+'"></span>':'';
   var btn=sin?'<a class="btn btn-verde" target="_blank" rel="noopener" href="'+esc(waUrl('Hola Nicom System, quiero consultar disponibilidad de: '+p.nombre.slice(0,120)))+'">Consultar disponibilidad</a>'
             :'<button class="btn btn-azul" data-add="'+esc(p.id)+'">Agregar al pedido</button>';
   return '<article class="card"><button class="card-img" data-open="'+esc(p.id)+'" aria-label="Ver detalle de '+esc(limpio(p.nombre))+'">'+(img?'<img src="'+esc(img)+'" alt="'+esc(limpio(p.nombre))+'" loading="lazy" onerror="this.outerHTML=PH">':PH)+tag+'</button>'
    +'<div class="card-b"><span class="cat">'+esc(p.categoria||'')+'</span><h3 data-open="'+esc(p.id)+'">'+esc(limpio(p.nombre))+'</h3>'
-   +'<div class="price">'+usd(p.precio_efectivo_usd)+anterior+'</div><div class="iva">+ IVA</div>'+btn+'</div></article>';
+   +'<div class="price"><span data-modo="ref" data-bs="'+Number(p.precio_efectivo_usd)+'"></span>'+anterior+'</div><div class="iva">+ IVA · $ ref a tasa BCV</div><div class="iva" data-modo="card" data-bs="'+Number(p.precio_efectivo_usd)+'"></div>'+btn+'</div></article>';
 }
 
 /* ===== Hero: lista de productos que bajaron de precio + tasa usada ===== */
@@ -82,8 +117,8 @@ function pintarV(){
   $('#vitCat').textContent=p.categoria||'';
   $('#vitN').textContent=(V.i+1)+' de '+V.d.length;
   $('#vitNom').textContent=limpio(p.nombre);
-  $('#vitPrecio').innerHTML=usd(p.precio_efectivo_usd)+((p.bajo_de_precio&&p.precio_anterior_usd)?'<s>'+usd(p.precio_anterior_usd)+'</s>':'');
-  $('#vitIva').textContent='+ IVA';
+  $('#vitPrecio').innerHTML='<span data-modo="ref" data-bs="'+Number(p.precio_efectivo_usd)+'"></span>'+((p.bajo_de_precio&&p.precio_anterior_usd)?'<span data-modo="ant" data-bs="'+Number(p.precio_anterior_usd)+'"></span>':'');
+  $('#vitIva').innerHTML='+ IVA · $ ref a tasa BCV<br><span data-modo="card" data-bs="'+Number(p.precio_efectivo_usd)+'"></span>';
   $('#vitAdd').setAttribute('data-add',p.id);
 }
 function cargarVitrina(){
@@ -108,7 +143,7 @@ function cargarBajaron(){
     if(!d.length)return;
     guardar(d);
     $('#listaPItems').innerHTML=d.map(function(p){
-      return '<button class="pl" data-open="'+esc(p.id)+'"><span class="pn">'+esc(limpio(p.nombre))+'</span><span class="pp"><s>'+usd(p.precio_anterior_usd||0)+'</s>'+usd(p.precio_efectivo_usd)+'</span></button>';
+      return '<button class="pl" data-open="'+esc(p.id)+'"><span class="pn">'+esc(limpio(p.nombre))+'</span><span class="pp"><span data-modo="ant" data-bs="'+Number(p.precio_anterior_usd||0)+'"></span><span data-modo="ref" data-bs="'+Number(p.precio_efectivo_usd)+'"></span></span></button>';
     }).join('');
     $('#listaP').hidden=!$('#vit').hidden;
   }).catch(function(){});
@@ -217,7 +252,7 @@ function abrirProducto(id){
     b.innerHTML='<button class="x" data-close aria-label="Cerrar">×</button><h2>'+esc(limpio(q.nombre))+'</h2>'
      +'<div class="big" id="big">'+(fotos[0]?'<img src="'+esc(fotos[0])+'" alt="'+esc(limpio(q.nombre))+'">':PH)+'</div>'
      +(fotos.length>1?'<div class="gal">'+fotos.map(function(f){return'<img src="'+esc(f)+'" alt="" loading="lazy" data-foto="'+esc(f)+'">'}).join('')+'</div>':'')
-     +'<div class="price" style="margin-top:14px">'+usd(q.precio_efectivo_usd)+'</div><div class="iva">+ IVA'+(q.sku?' · Ref: '+esc(q.sku):'')+'</div>'
+     +'<div class="price" style="margin-top:14px"><span data-modo="ref" data-bs="'+Number(q.precio_efectivo_usd)+'"></span></div><div class="iva">+ IVA · $ ref a tasa BCV'+(q.sku?' · Ref: '+esc(q.sku):'')+'</div><div class="iva" data-modo="full" data-bs="'+Number(q.precio_efectivo_usd)+'"></div>'
      +(q.descripcion?'<div class="desc">'+esc(String(q.descripcion).slice(0,900))+'</div>':'')+sp
      +(sin?'<a class="btn btn-verde" style="width:100%;margin-top:16px" target="_blank" rel="noopener" href="'+esc(waUrl('Hola Nicom System, quiero consultar disponibilidad de: '+q.nombre.slice(0,120)))+'">Consultar disponibilidad</a>'
           :'<button class="btn btn-azul" style="width:100%;margin-top:16px" data-add="'+esc(q.id)+'" data-cerrar>Agregar al pedido</button>');
@@ -243,17 +278,17 @@ function agregar(id){
   else C.push({id:id,nombre:p.nombre,precio:Number(p.precio_efectivo_usd),bs:Number(p.precio_bs||0),img:okUrl(p.imagen_url),qty:1,stock:p.stock});
   guardarC();toast('Agregado al pedido');
 }
-function totales(){var u=0,b=0,n=0;C.forEach(function(x){u+=x.precio*x.qty;b+=x.bs*x.qty;n+=x.qty});return{u:u,b:b,n:n}}
+function totales(){var u=0,b=0,n=0,r=0;C.forEach(function(x){u+=x.precio*x.qty;b+=x.bs*x.qty;n+=x.qty;r+=refDe(x.precio*x.qty)});return{u:u,b:b,n:n,r:Math.round(r*100)/100}}
 function pintarC(){
   var t=totales(),n=$('#cartN');n.textContent=t.n||'';n.setAttribute('data-n',t.n);
   var box=$('#items');
   if(!C.length){box.innerHTML='<div class="vacio" style="margin-top:16px">Tu pedido está vacío.<br>Agrega productos desde la tienda.</div>';$('#footCarrito').style.display='none';return}
   $('#footCarrito').style.display='';
   box.innerHTML=C.map(function(x,i){
-    return '<div class="it"><div class="im">'+(x.img?'<img src="'+esc(x.img)+'" alt="">':PH)+'</div><div><div class="n">'+esc(limpio(x.nombre))+'</div><div class="q"><button data-q2="-1" data-i="'+i+'" aria-label="Menos">−</button><span>'+x.qty+'</span><button data-q2="1" data-i="'+i+'" aria-label="Más">+</button><button class="del" data-del="'+i+'">Quitar</button></div></div><strong>'+usd(x.precio*x.qty)+'</strong></div>';
+    return '<div class="it"><div class="im">'+(x.img?'<img src="'+esc(x.img)+'" alt="">':PH)+'</div><div><div class="n">'+esc(limpio(x.nombre))+'</div><div class="q"><button data-q2="-1" data-i="'+i+'" aria-label="Menos">−</button><span>'+x.qty+'</span><button data-q2="1" data-i="'+i+'" aria-label="Más">+</button><button class="del" data-del="'+i+'">Quitar</button></div></div><strong>'+usd(T.bcv?refDe(x.precio*x.qty):x.precio*x.qty)+'</strong></div>';
   }).join('');
-  $('#totUsd').textContent=usd(t.u);
-  $('#totBs').textContent='Sin IVA. No pagas ahora: el monto en Bs. te lo damos al confirmar.';
+  $('#totUsd').textContent=usd(T.bcv?t.r:t.u);
+  $('#totBs').innerHTML=T.bcv?textoBs(t.u,'full',t.r)+'<br>Sin IVA; el IVA va en factura aparte. No pagas ahora.':'Sin IVA. No pagas ahora: el monto en Bs. te lo damos al confirmar.';
 }
 $('#items').addEventListener('click',function(e){
   var q=e.target.closest('[data-q2]'),d=e.target.closest('[data-del]');
@@ -269,9 +304,24 @@ $('#btnVaciar').onclick=function(){if(confirm('¿Vaciar tu pedido?')){C=[];guard
 document.addEventListener('keydown',function(e){if(e.key==='Escape')abrirC(false)});
 
 /* ===== Pago y envío del pedido por WhatsApp (+ registro del lead) ===== */
+function resumenPago(){
+  var t=totales(),m=(document.querySelector('input[name=metodo]:checked')||{}).value||'',ok=!!T.bcv,h1,h2;
+  var ahorro=ok&&t.r>t.u?' Ahorras <strong>'+usd(t.r-t.u)+'</strong> ('+pctDe(t.u,t.r)+'%) frente a $ ref '+usd(t.r)+' a tasa BCV.':'';
+  if(esMetodoBs(m)){
+    if(ok){
+      h1=t.n+' producto(s) · Total a pagar en bolívares: <strong>'+bs(bsRef(t.r))+'</strong> (= '+usd(t.r)+' × tasa BCV '+bs(T.bcv)+') + IVA';
+      h2='Pagas <strong>'+bs(bsRef(t.r))+'</strong> (= $ ref '+usd(t.r)+' × tasa BCV '+bs(T.bcv)+') + IVA.<br>Si pagas en divisas o efectivo (Zelle, Binance, efectivo): <strong>'+usd(t.u)+'</strong> + IVA — ahorras '+usd(t.r-t.u)+' ('+pctDe(t.u,t.r)+'%).';
+    }else{h1=t.n+' producto(s) · El monto en Bs. te lo confirmamos por WhatsApp';h2='Pagas en bolívares a tasa BCV del día. Te confirmamos el monto exacto por WhatsApp.'}
+  }else{
+    h1=t.n+' producto(s) · Total a pagar en '+esc(m||'divisas o efectivo')+': <strong>'+usd(t.u)+'</strong> + IVA'+(ok&&t.r>t.u?' ($ ref '+usd(t.r)+': ahorras '+usd(t.r-t.u)+', '+pctDe(t.u,t.r)+'%)':'');
+    h2='Pagas <strong>'+usd(t.u)+'</strong> en '+esc(m||'divisas o efectivo')+' + IVA.'+ahorro;
+  }
+  $('#resPago').innerHTML=h1;var r2=$('#resPago2');if(r2)r2.innerHTML=h2;
+}
+document.addEventListener('change',function(e){if(e.target&&e.target.name==='metodo')resumenPago()});
 $('#btnPagar').onclick=function(){
   var t=totales();if(!t.n)return;
-  $('#resPago').textContent=t.n+' producto(s) · Total '+usd(t.u)+' (sin IVA)';
+  resumenPago();
   $('#ePago').textContent='';abrirC(false);$('#dlgPago').showModal();
 };
 $('#btnEnviar').onclick=function(){
@@ -319,8 +369,9 @@ $('#btnEnviar').onclick=function(){
   $('#ePago').textContent='';
   var m=(document.querySelector('input[name=metodo]:checked')||{}).value||'';
   var t=totales();
-  var msg='Hola Nicom System, quiero solicitar este pedido:\n'+C.map(function(x){return '• '+x.qty+' x '+x.nombre.slice(0,80)+' — '+usd(x.precio*x.qty)}).join('\n')
-    +'\n\nTotal: '+usd(t.u)+' (sin IVA)'+'\nMétodo de pago: '+m+'\nNombre: '+nom+'\nWhatsApp: '+tel+'\n'+linea;
+  var msg='Hola Nicom System, quiero solicitar este pedido:\n'+C.map(function(x){return '• '+x.qty+' x '+x.nombre.slice(0,80)+' — '+usd(T.bcv?refDe(x.precio*x.qty):x.precio*x.qty)}).join('\n')
+    +(T.bcv?'\n\nTotal ($ ref a tasa BCV): '+usd(t.r)+' (sin IVA)\nEn bolívares (tasa BCV '+bs(T.bcv)+' del '+T.fecha+'): '+bs(bsRef(t.r))+'\nPagando en divisas o efectivo: '+usd(t.u)+' (ahorras '+usd(t.r-t.u)+', '+pctDe(t.u,t.r)+'%)':'\n\nTotal pagando en divisas o efectivo: '+usd(t.u)+' (sin IVA)')
+    +'\nMétodo de pago: '+m+'\nNombre: '+nom+'\nWhatsApp: '+tel+'\n'+linea;
   var cuerpo={tenant_slug:CFG.slug,items:C.map(function(x){return{producto_id:x.id,nombre:x.nombre,cantidad:x.qty,precio_efectivo_usd:x.precio}}),total_usd:t.u,mensaje:msg,origen:'web',cliente_nombre:nom,cliente_telefono:tel,metodo_pago:m,entrega_tipo:ent,entrega_zona:zona,vendedor_codigo:vendedor()};
   for(var k in d)cuerpo[k]=d[k];
   try{fetch(CFG.url+'/functions/v1/registrar-lead-catalogo',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',apikey:CFG.key,Authorization:'Bearer '+CFG.key},body:JSON.stringify(cuerpo)}).catch(function(){})}catch(_){}
