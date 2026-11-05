@@ -264,3 +264,7 @@ section.cta{padding:40px 0}
 .co .aviso[hidden],.co [hidden]{display:none}
 .co .ck{display:flex;gap:10px;align-items:flex-start;margin-top:10px;font-weight:600;cursor:pointer}
 .co .ck input{width:20px;height:20px;min-height:0;margin-top:1px;accent-color:var(--azul);flex:none}
+
+.co .mapa-acc{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.co .btn-mapa{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border:1px solid #AEB8C6;border-radius:6px;background:#fff;color:var(--tinta);font:inherit;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer}
+.co .btn-mapa:hover{border-color:var(--tinta)}

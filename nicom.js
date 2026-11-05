@@ -328,13 +328,31 @@ $('#btnEnviar').onclick=function(){
 var PREFN={Nicom:'Delivery de Nicom',Yango:'Yango',Yummy:'Yummy',Ridery:'Ridery',Privado:'Motorizado privado'};
 var ENVST={cour:null,geo:null};
 function optsSel(arr,ph){return '<option value="">'+ph+'</option>'+arr.map(function(x){return '<option>'+esc(x)+'</option>'}).join('')}
+function mapaAyuda(id){
+  return '<div class="mapa-acc"><button type="button" class="btn-mapa" data-gps="'+id+'">📍 Usar mi ubicación actual</button>'
+    +'<a class="btn-mapa" href="https://www.google.com/maps" target="_blank" rel="noopener">🗺️ Abrir Google Maps</a></div>'
+    +'<p class="sub" id="'+id+'Msg">En Google Maps toca Compartir → Copiar enlace y pégalo arriba.</p>'
+}
+function ubicacionActual(id){
+  var msg=$('#'+id+'Msg'),campo=$('#'+id);
+  if(!navigator.geolocation){msg.textContent='Tu navegador no permite obtener la ubicación. Abre Google Maps, copia el enlace y pégalo arriba.';return}
+  msg.textContent='Buscando tu ubicación… acepta el permiso que te pide el navegador.';
+  navigator.geolocation.getCurrentPosition(function(p){
+    campo.value='https://www.google.com/maps?q='+p.coords.latitude.toFixed(6)+','+p.coords.longitude.toFixed(6);
+    msg.textContent='Listo: agregamos tu ubicación actual. Si no es donde recibirás el pedido, bórrala y pega otro enlace.';
+  },function(){
+    msg.textContent='No pudimos obtener tu ubicación (falta el permiso). Abre Google Maps, copia el enlace y pégalo arriba.';
+  },{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
+}
 function montarEnvio(){
   var z=$('#pZona');if(!z||$('#envBloque'))return;
   var h=document.createElement('div');h.id='envBloque';
+  h.addEventListener('click',function(e){var g=e.target.closest('[data-gps]');if(g)ubicacionActual(g.getAttribute('data-gps'))});
   h.innerHTML=
    '<div id="bDel">'
   +'<label for="vDir" class="lb">Dirección y punto de referencia <span class="op">(opcional)</span></label><input id="vDir" maxlength="250" placeholder="Ej: Calle 3, edif. Sol, piso 2 · frente a la panadería">'
   +'<label for="vMapa" class="lb">Enlace de Google Maps <span class="op">(opcional)</span></label><input id="vMapa" inputmode="url" maxlength="300" placeholder="Pega aquí el enlace de tu ubicación">'
+  +mapaAyuda('vMapa')
   +'<p class="lb">¿Con quién prefieres el delivery?</p><div class="metodos" id="prefs">'
   +'<label><input type="radio" name="pref" value="Nicom" checked><span>Delivery de Nicom <small class="rec">Recomendado</small><small class="sub">Nicom se encarga y responde por tu entrega.</small></span></label>'
   +['Yango','Yummy','Ridery','Privado'].map(function(k){return '<label><input type="radio" name="pref" value="'+k+'"><span>'+PREFN[k]+'</span></label>'}).join('')
@@ -353,6 +371,7 @@ function montarEnvio(){
   +'<label for="dDir" class="lb">Dirección <span class="op" id="opDir">(solo si es a domicilio)</span></label><textarea id="dDir" maxlength="280" rows="2" placeholder="Calle, edificio o casa, número"></textarea>'
   +'<label for="dRef" class="lb">Punto de referencia <span class="op">(opcional)</span></label><input id="dRef" maxlength="250" placeholder="Ej: al lado del banco">'
   +'<label for="dMapa" class="lb">Enlace de Google Maps <span class="op">(opcional)</span></label><input id="dMapa" inputmode="url" maxlength="300" placeholder="Pega aquí el enlace de tu ubicación">'
+  +mapaAyuda('dMapa')
   +'<p class="lb">¿Quién recibe el pedido?</p>'
   +'<input id="rNombre" autocomplete="name" maxlength="100" placeholder="Nombre completo">'
   +'<input id="rCedula" inputmode="text" maxlength="14" placeholder="Cédula (Ej: V12345678)" style="margin-top:8px">'
