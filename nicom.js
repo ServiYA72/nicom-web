@@ -59,6 +59,7 @@ function api(path,extra){
 }
 /* ===== Precio claro: se muestra el "$ ref" (referencia) que se paga en Bs. a tasa BCV; con divisas/efectivo hay descuento ===== */
 var T={bcv:0,bin:0,fecha:'',fail:false};
+var DESC_DIVISAS=false; /* DESC_DIVISAS=false: NO mostrar al cliente el descuento por pagar en divisas (apagado hasta validar con abogado/contador). Poner true para encenderlo. */
 function refDe(n){return T.bcv&&T.bin?Math.ceil(Number(n)*T.bin/T.bcv*100-1e-9)/100:0}   /* $ ref (centavo hacia arriba) */
 function bsRef(r){return T.bcv?Math.round(r*T.bcv*100)/100:0}                              /* Bs. a pagar = $ ref x tasa BCV (cuadra exacto) */
 function pctDe(d,r){return r>0?Math.round((1-d/r)*100):0}
@@ -69,8 +70,8 @@ function textoBs(n,modo,r){
   if(modo==='ref')return T.bcv?usd(r!=null?r:refDe(d)):(T.fail?usd(d):'');
   if(!T.bcv||!T.bin)return '';
   r=r!=null?r:refDe(d);var b=bsRef(r),a=pctDe(d,r);
-  if(modo==='card')return 'Divisas o efectivo: <strong>'+usd(d)+'</strong>'+(a>0?' (−'+a+'%)':'')+'<br>En Bs. (tasa BCV): '+bs(b);
-  return '<strong>En bolívares</strong> (Pago Móvil o transferencia): '+usd(r)+' × tasa BCV '+bs(T.bcv)+' = <strong>'+bs(b)+'</strong> + IVA.<br><strong>Pagando en divisas o efectivo</strong> (Zelle, Binance, efectivo): <strong>'+usd(d)+'</strong> + IVA'+(a>0?' — ahorras '+usd(r-d)+' ('+a+'%)':'')+'.';
+  if(modo==='card')return (DESC_DIVISAS?'Divisas o efectivo: <strong>'+usd(d)+'</strong>'+(a>0?' (−'+a+'%)':'')+'<br>':'')+'En Bs. (tasa BCV): '+bs(b);
+  return '<strong>En bolívares</strong> (Pago Móvil o transferencia): '+usd(r)+' × tasa BCV '+bs(T.bcv)+' = <strong>'+bs(b)+'</strong> + IVA.'+(DESC_DIVISAS?'<br><strong>Pagando en divisas o efectivo</strong> (Zelle, Binance, efectivo): <strong>'+usd(d)+'</strong> + IVA'+(a>0?' — ahorras '+usd(r-d)+' ('+a+'%)':'')+'.':'');
 }
 function pintarBs(){
   if(!T.bcv&&!T.fail)return;
@@ -306,15 +307,15 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')abrirC(false
 /* ===== Pago y envío del pedido por WhatsApp (+ registro del lead) ===== */
 function resumenPago(){
   var t=totales(),m=(document.querySelector('input[name=metodo]:checked')||{}).value||'',ok=!!T.bcv,h1,h2;
-  var ahorro=ok&&t.r>t.u?' Ahorras <strong>'+usd(t.r-t.u)+'</strong> ('+pctDe(t.u,t.r)+'%) frente a $ ref '+usd(t.r)+' a tasa BCV.':'';
   if(esMetodoBs(m)){
     if(ok){
       h1=t.n+' producto(s) · Total a pagar en bolívares: <strong>'+bs(bsRef(t.r))+'</strong> (= '+usd(t.r)+' × tasa BCV '+bs(T.bcv)+') + IVA';
-      h2='Pagas <strong>'+bs(bsRef(t.r))+'</strong> (= $ ref '+usd(t.r)+' × tasa BCV '+bs(T.bcv)+') + IVA.<br>Si pagas en divisas o efectivo (Zelle, Binance, efectivo): <strong>'+usd(t.u)+'</strong> + IVA — ahorras '+usd(t.r-t.u)+' ('+pctDe(t.u,t.r)+'%).';
+      h2='Pagas <strong>'+bs(bsRef(t.r))+'</strong> (= $ ref '+usd(t.r)+' × tasa BCV '+bs(T.bcv)+') + IVA.'+(DESC_DIVISAS?'<br>Si pagas en divisas o efectivo (Zelle, Binance, efectivo): <strong>'+usd(t.u)+'</strong> + IVA — ahorras '+usd(t.r-t.u)+' ('+pctDe(t.u,t.r)+'%).':'');
     }else{h1=t.n+' producto(s) · El monto en Bs. te lo confirmamos por WhatsApp';h2='Pagas en bolívares a tasa BCV del día. Te confirmamos el monto exacto por WhatsApp.'}
   }else{
-    h1=t.n+' producto(s) · Total a pagar en '+esc(m||'divisas o efectivo')+': <strong>'+usd(t.u)+'</strong> + IVA'+(ok&&t.r>t.u?' ($ ref '+usd(t.r)+': ahorras '+usd(t.r-t.u)+', '+pctDe(t.u,t.r)+'%)':'');
-    h2='Pagas <strong>'+usd(t.u)+'</strong> en '+esc(m||'divisas o efectivo')+' + IVA.'+ahorro;
+    var tot=(DESC_DIVISAS||!ok)?t.u:t.r;
+    h1=t.n+' producto(s) · Total a pagar en '+esc(m||'divisas o efectivo')+': <strong>'+usd(tot)+'</strong> + IVA'+(DESC_DIVISAS&&ok&&t.r>t.u?' ($ ref '+usd(t.r)+': ahorras '+usd(t.r-t.u)+', '+pctDe(t.u,t.r)+'%)':'');
+    h2='Pagas <strong>'+usd(tot)+'</strong> en '+esc(m||'divisas o efectivo')+' + IVA. Te confirmamos el monto final y los datos de pago por WhatsApp.'+(DESC_DIVISAS&&ok&&t.r>t.u?' Ahorras <strong>'+usd(t.r-t.u)+'</strong> ('+pctDe(t.u,t.r)+'%) frente a $ ref '+usd(t.r)+' a tasa BCV.':'');
   }
   $('#resPago').innerHTML=h1;var r2=$('#resPago2');if(r2)r2.innerHTML=h2;
 }
@@ -370,7 +371,7 @@ $('#btnEnviar').onclick=function(){
   var m=(document.querySelector('input[name=metodo]:checked')||{}).value||'';
   var t=totales();
   var msg='Hola Nicom System, quiero solicitar este pedido:\n'+C.map(function(x){return '• '+x.qty+' x '+x.nombre.slice(0,80)+' — '+usd(T.bcv?refDe(x.precio*x.qty):x.precio*x.qty)}).join('\n')
-    +(T.bcv?'\n\nTotal ($ ref a tasa BCV): '+usd(t.r)+' (sin IVA)\nEn bolívares (tasa BCV '+bs(T.bcv)+' del '+T.fecha+'): '+bs(bsRef(t.r))+'\nPagando en divisas o efectivo: '+usd(t.u)+' (ahorras '+usd(t.r-t.u)+', '+pctDe(t.u,t.r)+'%)':'\n\nTotal pagando en divisas o efectivo: '+usd(t.u)+' (sin IVA)')
+    +(T.bcv?'\n\nTotal ($ ref a tasa BCV): '+usd(t.r)+' (sin IVA)\nEn bolívares (tasa BCV '+bs(T.bcv)+' del '+T.fecha+'): '+bs(bsRef(t.r))+(DESC_DIVISAS?'\nPagando en divisas o efectivo: '+usd(t.u)+' (ahorras '+usd(t.r-t.u)+', '+pctDe(t.u,t.r)+'%)':''):'\n\nTotal pagando en divisas o efectivo: '+usd(t.u)+' (sin IVA)')
     +'\nMétodo de pago: '+m+'\nNombre: '+nom+'\nWhatsApp: '+tel+'\n'+linea;
   var cuerpo={tenant_slug:CFG.slug,items:C.map(function(x){return{producto_id:x.id,nombre:x.nombre,cantidad:x.qty,precio_efectivo_usd:x.precio}}),total_usd:t.u,mensaje:msg,origen:'web',cliente_nombre:nom,cliente_telefono:tel,metodo_pago:m,entrega_tipo:ent,entrega_zona:zona,vendedor_codigo:vendedor()};
   for(var k in d)cuerpo[k]=d[k];
