@@ -187,7 +187,7 @@ var t=m[location.hash];if(!t)return;var p=t.split('#');location.replace(p[0]+loc
   <header><h2 style="font-size:20px">Tu pedido</h2><button class="x" id="cerrarCarrito" aria-label="Cerrar">×</button></header>
   <div class="items" id="items"></div>
   <div class="foot" id="footCarrito">
-    <div class="tot"><span>Total</span><span id="totUsd">$0.00</span></div>
+    <div class="tot"><span>Total (divisas o efectivo)</span><span id="totUsd">$0.00</span></div>
     <div class="iva" id="totBs" style="margin-top:2px"></div>
     <div class="iva">Precios sin IVA. El IVA va en factura aparte.</div>
     <button class="btn btn-azul" id="btnPagar">Solicitar mi pedido</button>
@@ -214,13 +214,13 @@ var t=m[location.hash];if(!t)return;var p=t.split('#');location.replace(p[0]+loc
   <div class="err" id="ePago" style="color:#B3261E"></div>
   <p style="font-weight:600;margin-top:8px">¿Cómo prefieres pagar?</p>
   <div class="metodos" id="metodos">
-    <label><input type="radio" name="metodo" value="Pago Móvil" checked>Pago Móvil</label>
-    <label><input type="radio" name="metodo" value="Transferencia">Transferencia nacional</label>
+    <label><input type="radio" name="metodo" value="Pago Móvil" checked>Pago Móvil (Bs.)</label>
+    <label><input type="radio" name="metodo" value="Transferencia">Transferencia nacional (Bs.)</label>
     <label><input type="radio" name="metodo" value="Zelle">Zelle</label>
     <label><input type="radio" name="metodo" value="Binance / USDT">Binance P2P / USDT</label>
     <label><input type="radio" name="metodo" value="Efectivo">Efectivo</label>
   </div>
-  <p class="iva"><strong>No pagas ahora.</strong> Te respondemos por WhatsApp con la disponibilidad, el tiempo de entrega y el monto exacto en Bs. a la tasa BCV del día. Solo pagas cuando tú lo confirmes.</p>
+  <p class="iva"><strong>No pagas ahora.</strong> Te confirmamos por WhatsApp la disponibilidad, la entrega y los datos de pago. El monto en Bs. se calcula con el precio referencial y la tasa BCV del día de tu pago; si la tasa cambia, te avisamos el monto actualizado antes de que pagues. Solo pagas cuando tú lo confirmes.</p>
   <button class="btn btn-verde" id="btnEnviar" style="width:100%;margin-top:14px;white-space:normal"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg>Enviar solicitud por WhatsApp</button>
 </div></dialog>
 
