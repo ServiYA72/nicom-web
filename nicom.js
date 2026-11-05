@@ -303,7 +303,11 @@ $('#btnEnviar').onclick=function(){
       +'\nDestino: '+zona+(dir?'\nDirección: '+dir:'')+(ref?'\nReferencia: '+ref:'')+(map?'\nUbicación: '+map:'')
       +'\nRecibe: '+rn+' · C.I. '+rc;
   }else{
-    if(zona.length<2)return er('Escribe tu zona o urbanización.',$('#pZona'));
+    var cmu=$('#cMunicipio').value,cpa=$('#cParroquia').value;
+    if(!cmu)return er('Elige el municipio donde recibes el pedido.',$('#cMunicipio'));
+    if(!cpa)return er('Elige la parroquia.',$('#cParroquia'));
+    if(zona.length<2)return er('Escribe tu urbanización o sector.',$('#pZona'));
+    zona=zona+', '+cpa+', '+cmu;
     var pf=(document.querySelector('input[name=pref]:checked')||{}).value||'Nicom',tercero=pf!=='Nicom';
     var dd=$('#vDir').value.trim(),vm=$('#vMapa').value.trim();
     if(tercero&&!$('#pAcepta').checked)return er('Para elegir '+PREFN[pf]+' debes aceptar el aviso de responsabilidad, o elige "Delivery de Nicom".',$('#pAcepta'));
@@ -344,12 +348,23 @@ function ubicacionActual(id){
     msg.textContent='No pudimos obtener tu ubicación (falta el permiso). Abre Google Maps, copia el enlace y pégalo arriba.';
   },{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
 }
+var GCAR={'Libertador':'Distrito Capital','Chacao':'Miranda','Baruta':'Miranda','El Hatillo':'Miranda','Sucre':'Miranda'};
+function cargarGeo(cb){
+  if(ENVST.geo){cb(ENVST.geo);return}
+  if(ENVST.geoCb){ENVST.geoCb.push(cb);return}
+  ENVST.geoCb=[cb];
+  fetch('venezuela.json?v=1').then(function(r){return r.json()}).then(function(g){ENVST.geo=g;var l=ENVST.geoCb;ENVST.geoCb=null;l.forEach(function(f){f(g)})})
+    .catch(function(){ENVST.geoCb=null;var m=$('#cMunicipio'),s=$('#dEstado');if(m)m.innerHTML='<option value="">No se pudo cargar la lista, recarga la página</option>';if(s)s.innerHTML='<option value="">No se pudo cargar la lista, recarga la página</option>'})
+}
 function montarEnvio(){
   var z=$('#pZona');if(!z||$('#envBloque'))return;
   var h=document.createElement('div');h.id='envBloque';
   h.addEventListener('click',function(e){var g=e.target.closest('[data-gps]');if(g)ubicacionActual(g.getAttribute('data-gps'))});
   h.innerHTML=
    '<div id="bDel">'
+  +'<label for="cMunicipio" class="lb">Municipio</label><select id="cMunicipio"><option value="">Cargando…</option></select>'
+  +'<label for="cParroquia" class="lb">Parroquia</label><select id="cParroquia" disabled><option value="">Primero elige el municipio</option></select>'
+  +'<div id="zonaSlot"></div>'
   +'<label for="vDir" class="lb">Dirección y punto de referencia <span class="op">(opcional)</span></label><input id="vDir" maxlength="250" placeholder="Ej: Calle 3, edif. Sol, piso 2 · frente a la panadería">'
   +'<label for="vMapa" class="lb">Enlace de Google Maps <span class="op">(opcional)</span></label><input id="vMapa" inputmode="url" maxlength="300" placeholder="Pega aquí el enlace de tu ubicación">'
   +mapaAyuda('vMapa')
@@ -378,6 +393,10 @@ function montarEnvio(){
   +'<p class="sub">El costo del envío te lo confirmamos por WhatsApp antes de despachar. La agencia puede pedir la cédula al entregar.</p>'
   +'</div>';
   z.parentNode.insertBefore(h,z.nextSibling);
+  var lz=$('#lblZona');lz.textContent='Urbanización o sector';lz.className='lb';z.placeholder='Ej: Urb. La Florida, calle 3';
+  $('#zonaSlot').appendChild(lz);$('#zonaSlot').appendChild(z);
+  $('#cMunicipio').addEventListener('change',function(){var g=ENVST.geo,m=this.value,p=$('#cParroquia');if(!m||!g){p.innerHTML='<option value="">Primero elige el municipio</option>';p.disabled=true;return}p.innerHTML=optsSel(g[GCAR[m]][m],'Elige la parroquia');p.disabled=false});
+  cargarGeo(function(g){$('#cMunicipio').innerHTML=optsSel(Object.keys(GCAR),'Elige el municipio')});
   $('#prefs').addEventListener('change',function(){var p=(document.querySelector('input[name=pref]:checked')||{}).value;$('#avisoTer').hidden=(p==='Nicom');if(p==='Nicom')$('#pAcepta').checked=false});
   document.querySelectorAll('input[name=cmod]').forEach(function(r){r.addEventListener('change',function(){var o=r.value==='oficina';$('#bOfi').hidden=!o;$('#opDir').textContent=o?'(opcional)':'(obligatoria a domicilio)'})});
   $('#dEstado').addEventListener('change',function(){var g=ENVST.geo,e=this.value,m=$('#dMun');$('#dPar').innerHTML='<option value="">Primero elige el municipio</option>';$('#dPar').disabled=true;if(!e||!g){m.innerHTML='<option value="">Primero elige el estado</option>';m.disabled=true;return}m.innerHTML=optsSel(Object.keys(g[e]).sort(function(a,b){return a.localeCompare(b,'es')}),'Elige el municipio');m.disabled=false});
@@ -390,7 +409,7 @@ function cargarEnvioNacional(){
       $('#listaCour').innerHTML=a.map(function(c){return '<label><input type="radio" name="courier" value="'+esc(c.id)+'" data-n="'+esc(c.nombre)+'"><span>'+esc(c.nombre)+(c.recomendado?' <small class="rec">Recomendado</small>':'')+(c.nota?'<small class="sub">'+esc(c.nota)+'</small>':'')+'</span></label>'}).join('');ENVST.cour='ok';
     }).catch(function(){ENVST.cour=null;$('#listaCour').innerHTML='<input id="cFallback" maxlength="60" placeholder="Escribe el courier que prefieres (Ej: Tealca, MRW, Zoom)">'});
   }
-  if(!ENVST.geo){fetch('venezuela.json?v=1').then(function(r){return r.json()}).then(function(g){ENVST.geo=g;$('#dEstado').innerHTML=optsSel(Object.keys(g).sort(function(a,b){return a.localeCompare(b,'es')}),'Elige el estado')}).catch(function(){$('#dEstado').innerHTML='<option value="">No se pudo cargar la lista, recarga la página</option>'})}
+  cargarGeo(function(g){if($('#dEstado').options.length<=1)$('#dEstado').innerHTML=optsSel(Object.keys(g).sort(function(a,b){return a.localeCompare(b,'es')}),'Elige el estado')});
 }
 montarEnvio();
 $('#entregas').addEventListener('change',function(){
