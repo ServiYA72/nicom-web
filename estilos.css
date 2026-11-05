@@ -108,7 +108,7 @@ header.top{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px so
 /* tienda */
 .tools{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
 .search{display:flex;gap:8px}.search input{flex:1;min-width:0}
-.search input,.f input,.f select,.f textarea,.co input,#selCat{font:inherit;width:100%;min-height:48px;border:1px solid #AEB8C6;border-radius:6px;padding:0 14px;background:#fff;color:var(--tinta)}
+.search input,.f input,.f select,.f textarea,.co input,.co select,.co textarea,#selCat{font:inherit;width:100%;min-height:48px;border:1px solid #AEB8C6;border-radius:6px;padding:0 14px;background:#fff;color:var(--tinta)}
 .f textarea{padding:12px 14px;min-height:96px;resize:vertical}
 .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin}
 .chip{flex:none;border:1px solid #AEB8C6;background:#fff;border-radius:6px;padding:8px 14px;font-size:14px;min-height:40px;font-weight:500}
@@ -249,3 +249,18 @@ section.cta{padding:40px 0}
 .punto-dest .lista{margin-top:16px}
 .h1-punto{font-size:clamp(30px,4.4vw,50px);line-height:1.05}
 .fcard{align-content:start}
+
+/* Datos de entrega (delivery Caracas / envío nacional) */
+.co textarea{padding:12px 14px;min-height:72px;resize:vertical}
+.co select{padding:0 10px}
+.co select:disabled{background:#F1F3F6;color:#7A8594}
+.co .lb{font-size:14px;font-weight:600;display:block;margin:12px 0 4px}
+.co .op{font-weight:400;color:var(--gris);font-size:13px}
+.co .sub{display:block;font-size:13px;color:var(--gris);margin:4px 0 0;font-weight:400}
+.co .metodos .sub{margin:2px 0 0}
+.co .rec{display:inline-block;background:#E4F4EA;color:#14532D;border-radius:10px;padding:1px 8px;font-size:12px;font-weight:600;margin-left:6px}
+.co .metodos span{display:block}
+.co .aviso{background:#FFF6E0;border:1px solid #E7C873;border-radius:6px;padding:12px 14px;font-size:14px;line-height:1.45;margin:8px 0}
+.co .aviso[hidden],.co [hidden]{display:none}
+.co .ck{display:flex;gap:10px;align-items:flex-start;margin-top:10px;font-weight:600;cursor:pointer}
+.co .ck input{width:20px;height:20px;min-height:0;margin-top:1px;accent-color:var(--azul);flex:none}

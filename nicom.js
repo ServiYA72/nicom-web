@@ -4,6 +4,7 @@ var CFG={
   url:'https://tkhzuopapvclmcgxyood.supabase.co',
   key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRraHp1b3BhcHZjbG1jZ3h5b29kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMDAzNTIsImV4cCI6MjEwMzc3NjM1Mn0.26o1jnPJzcokhweNiMpOB5A3rsUE3ZjxVV9YucD9ByU',
   slug:'nicom',
+  tid:'d0b12d88-fb26-4b50-b477-aabdac9cc1f5',
   wa:'584242342204',
   pagina:24
 };
@@ -276,24 +277,113 @@ $('#btnPagar').onclick=function(){
 $('#btnEnviar').onclick=function(){
   var nom=$('#pNombre').value.trim(),tel=$('#pTel').value.trim(),zona=$('#pZona').value.trim();
   var ent=(document.querySelector('input[name=entrega]:checked')||{}).value||'delivery';
-  if(nom.length<2){$('#ePago').textContent='Escribe tu nombre para identificar tu pedido.';$('#pNombre').focus();return}
-  if(tel.replace(/\D/g,'').length<7){$('#ePago').textContent='Escribe tu WhatsApp para confirmarte el pedido.';$('#pTel').focus();return}
-  if(zona.length<2){$('#ePago').textContent=ent==='courier'?'Escribe tu ciudad y estado.':'Escribe tu zona o urbanización.';$('#pZona').focus();return}
+  var er=function(m,el){$('#ePago').textContent=m;try{$('#ePago').scrollIntoView({block:'center',behavior:'smooth'})}catch(_){}if(el)el.focus({preventScroll:true});return false};
+  if(nom.length<2)return er('Escribe tu nombre para identificar tu pedido.',$('#pNombre'));
+  if(tel.replace(/\D/g,'').length<7)return er('Escribe tu WhatsApp para confirmarte el pedido.',$('#pTel'));
+  var d={},linea='';
+  if(ent==='courier'){
+    var cr=document.querySelector('input[name=courier]:checked'),mod=(document.querySelector('input[name=cmod]:checked')||{}).value||'';
+    var cFb=$('#cFallback');
+    if(!cr&&!(cFb&&cFb.value.trim()))return er('Elige el courier con el que quieres recibir tu pedido.');
+    if(!mod)return er('Elige si retiras en la agencia o lo recibes a domicilio.');
+    var ofi=$('#cOficina').value.trim(),est=$('#dEstado').value,mun=$('#dMun').value,par=$('#dPar').value;
+    var rn=$('#rNombre').value.trim(),rc=$('#rCedula').value.replace(/[^0-9A-Za-z]/g,''),dir=$('#dDir').value.trim(),ref=$('#dRef').value.trim(),map=$('#dMapa').value.trim();
+    if(mod==='oficina'&&ofi.length<3)return er('Escribe en qué ciudad o agencia quieres retirar.',$('#cOficina'));
+    if(!est)return er('Elige el estado de destino.',$('#dEstado'));
+    if(!mun)return er('Elige el municipio.',$('#dMun'));
+    if(!par)return er('Elige la parroquia.',$('#dPar'));
+    if(mod==='domicilio'&&dir.length<6)return er('Escribe la dirección completa para la entrega a domicilio.',$('#dDir'));
+    if(rn.length<3)return er('Escribe el nombre completo de quien recibe.',$('#rNombre'));
+    if(rc.replace(/\D/g,'').length<5)return er('Escribe la cédula de quien recibe.',$('#rCedula'));
+    if(map&&!/^https:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps|(www\.)?google\.[a-z.]+\/maps|maps\.google\.[a-z.]+)/i.test(map))return er('El enlace de Google Maps no parece válido. Déjalo vacío o pega el enlace que da Google Maps al compartir.',$('#dMapa'));
+    var cn=cr?cr.getAttribute('data-n'):cFb.value.trim();
+    d={courier_id:cr?cr.value:null,courier_modalidad:mod,courier_oficina:mod==='oficina'?ofi:null,dest_estado:est,dest_municipio:mun,dest_parroquia:par,dest_direccion:dir||null,dest_referencia:ref||null,dest_mapa_url:map||null,receptor_nombre:rn,receptor_cedula:rc};
+    zona=par+', '+mun+', '+est;
+    linea='Entrega: Envío nacional por '+cn+' ('+(mod==='oficina'?'retiro en agencia: '+ofi:'a domicilio')+')'
+      +'\nDestino: '+zona+(dir?'\nDirección: '+dir:'')+(ref?'\nReferencia: '+ref:'')+(map?'\nUbicación: '+map:'')
+      +'\nRecibe: '+rn+' · C.I. '+rc;
+  }else{
+    if(zona.length<2)return er('Escribe tu zona o urbanización.',$('#pZona'));
+    var pf=(document.querySelector('input[name=pref]:checked')||{}).value||'Nicom',tercero=pf!=='Nicom';
+    var dd=$('#vDir').value.trim(),vm=$('#vMapa').value.trim();
+    if(tercero&&!$('#pAcepta').checked)return er('Para elegir '+PREFN[pf]+' debes aceptar el aviso de responsabilidad, o elige "Delivery de Nicom".',$('#pAcepta'));
+    if(vm&&!/^https:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps|(www\.)?google\.[a-z.]+\/maps|maps\.google\.[a-z.]+)/i.test(vm))return er('El enlace de Google Maps no parece válido. Déjalo vacío o pega el enlace que da Google Maps al compartir.',$('#vMapa'));
+    d={entrega_preferencia:pf,acepta_terceros:tercero?true:null,dest_direccion:dd||null,dest_mapa_url:vm||null};
+    linea='Entrega: Delivery en Caracas — '+zona+(dd?'\nDirección y referencia: '+dd:'')+(vm?'\nUbicación: '+vm:'')
+      +'\nDelivery: '+(tercero?PREFN[pf]+' (elegido por el cliente; acepta que la responsabilidad del traslado es del servicio)':'de Nicom');
+  }
   $('#ePago').textContent='';
   var m=(document.querySelector('input[name=metodo]:checked')||{}).value||'';
   var t=totales();
   var msg='Hola Nicom System, quiero solicitar este pedido:\n'+C.map(function(x){return '• '+x.qty+' x '+x.nombre.slice(0,80)+' — '+usd(x.precio*x.qty)}).join('\n')
-    +'\n\nTotal: '+usd(t.u)+' (sin IVA)'+'\nMétodo de pago: '+m+'\nNombre: '+nom+'\nWhatsApp: '+tel+'\nEntrega: '+(ent==='courier'?'Envío nacional por courier':'Delivery en Caracas')+' — '+zona;
-  try{fetch(CFG.url+'/functions/v1/registrar-lead-catalogo',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',apikey:CFG.key,Authorization:'Bearer '+CFG.key},
-    body:JSON.stringify({tenant_slug:CFG.slug,items:C.map(function(x){return{producto_id:x.id,nombre:x.nombre,cantidad:x.qty,precio_efectivo_usd:x.precio}}),total_usd:t.u,mensaje:msg,origen:'web',cliente_nombre:nom,cliente_telefono:tel,metodo_pago:m,entrega_tipo:ent,entrega_zona:zona,vendedor_codigo:vendedor()})}).catch(function(){})}catch(_){}
+    +'\n\nTotal: '+usd(t.u)+' (sin IVA)'+'\nMétodo de pago: '+m+'\nNombre: '+nom+'\nWhatsApp: '+tel+'\n'+linea;
+  var cuerpo={tenant_slug:CFG.slug,items:C.map(function(x){return{producto_id:x.id,nombre:x.nombre,cantidad:x.qty,precio_efectivo_usd:x.precio}}),total_usd:t.u,mensaje:msg,origen:'web',cliente_nombre:nom,cliente_telefono:tel,metodo_pago:m,entrega_tipo:ent,entrega_zona:zona,vendedor_codigo:vendedor()};
+  for(var k in d)cuerpo[k]=d[k];
+  try{fetch(CFG.url+'/functions/v1/registrar-lead-catalogo',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',apikey:CFG.key,Authorization:'Bearer '+CFG.key},body:JSON.stringify(cuerpo)}).catch(function(){})}catch(_){}
   window.open(waUrl(msg),'_blank','noopener');
   $('#dlgPago').close();
 };
 
+/* ===== Datos de entrega: delivery en Caracas (preferencia + aviso) y envío nacional (courier + destino) ===== */
+var PREFN={Nicom:'Delivery de Nicom',Yango:'Yango',Yummy:'Yummy',Ridery:'Ridery',Privado:'Motorizado privado'};
+var ENVST={cour:null,geo:null};
+function optsSel(arr,ph){return '<option value="">'+ph+'</option>'+arr.map(function(x){return '<option>'+esc(x)+'</option>'}).join('')}
+function montarEnvio(){
+  var z=$('#pZona');if(!z||$('#envBloque'))return;
+  var h=document.createElement('div');h.id='envBloque';
+  h.innerHTML=
+   '<div id="bDel">'
+  +'<label for="vDir" class="lb">Dirección y punto de referencia <span class="op">(opcional)</span></label><input id="vDir" maxlength="250" placeholder="Ej: Calle 3, edif. Sol, piso 2 · frente a la panadería">'
+  +'<label for="vMapa" class="lb">Enlace de Google Maps <span class="op">(opcional)</span></label><input id="vMapa" inputmode="url" maxlength="300" placeholder="Pega aquí el enlace de tu ubicación">'
+  +'<p class="lb">¿Con quién prefieres el delivery?</p><div class="metodos" id="prefs">'
+  +'<label><input type="radio" name="pref" value="Nicom" checked><span>Delivery de Nicom <small class="rec">Recomendado</small><small class="sub">Nicom se encarga y responde por tu entrega.</small></span></label>'
+  +['Yango','Yummy','Ridery','Privado'].map(function(k){return '<label><input type="radio" name="pref" value="'+k+'"><span>'+PREFN[k]+'</span></label>'}).join('')
+  +'</div>'
+  +'<div class="aviso" id="avisoTer" hidden><strong>Aviso importante:</strong> si eliges Yango, Yummy, Ridery o un motorizado privado, el traslado lo hace ese servicio. Nicom prepara tu pedido y se lo entrega al conductor, pero <strong>no se hace responsable</strong> por retrasos, daños, pérdida ni trato durante el traslado. Si quieres que Nicom responda por tu entrega, elige <em>Delivery de Nicom</em>.'
+  +'<label class="ck"><input type="checkbox" id="pAcepta"><span>Entiendo y acepto este aviso.</span></label></div>'
+  +'<p class="sub">El costo del delivery te lo confirmamos por WhatsApp según tu zona y la hora.</p>'
+  +'</div>'
+  +'<div id="bCour" hidden>'
+  +'<p class="lb">Elige tu courier</p><div class="metodos" id="listaCour"><p class="sub">Cargando couriers…</p></div>'
+  +'<p class="lb">¿Cómo lo recibes?</p><div class="metodos"><label><input type="radio" name="cmod" value="oficina"><span>Retiro en agencia del courier</span></label><label><input type="radio" name="cmod" value="domicilio"><span>Entrega a domicilio</span></label></div>'
+  +'<div id="bOfi" hidden><label for="cOficina" class="lb">Ciudad o agencia donde retiras</label><input id="cOficina" maxlength="150" placeholder="Ej: Agencia Valencia Centro"></div>'
+  +'<label for="dEstado" class="lb">Estado</label><select id="dEstado"><option value="">Cargando…</option></select>'
+  +'<label for="dMun" class="lb">Municipio</label><select id="dMun" disabled><option value="">Primero elige el estado</option></select>'
+  +'<label for="dPar" class="lb">Parroquia</label><select id="dPar" disabled><option value="">Primero elige el municipio</option></select>'
+  +'<label for="dDir" class="lb">Dirección <span class="op" id="opDir">(solo si es a domicilio)</span></label><textarea id="dDir" maxlength="280" rows="2" placeholder="Calle, edificio o casa, número"></textarea>'
+  +'<label for="dRef" class="lb">Punto de referencia <span class="op">(opcional)</span></label><input id="dRef" maxlength="250" placeholder="Ej: al lado del banco">'
+  +'<label for="dMapa" class="lb">Enlace de Google Maps <span class="op">(opcional)</span></label><input id="dMapa" inputmode="url" maxlength="300" placeholder="Pega aquí el enlace de tu ubicación">'
+  +'<p class="lb">¿Quién recibe el pedido?</p>'
+  +'<input id="rNombre" autocomplete="name" maxlength="100" placeholder="Nombre completo">'
+  +'<input id="rCedula" inputmode="text" maxlength="14" placeholder="Cédula (Ej: V12345678)" style="margin-top:8px">'
+  +'<p class="sub">El costo del envío te lo confirmamos por WhatsApp antes de despachar. La agencia puede pedir la cédula al entregar.</p>'
+  +'</div>';
+  z.parentNode.insertBefore(h,z.nextSibling);
+  $('#prefs').addEventListener('change',function(){var p=(document.querySelector('input[name=pref]:checked')||{}).value;$('#avisoTer').hidden=(p==='Nicom');if(p==='Nicom')$('#pAcepta').checked=false});
+  document.querySelectorAll('input[name=cmod]').forEach(function(r){r.addEventListener('change',function(){var o=r.value==='oficina';$('#bOfi').hidden=!o;$('#opDir').textContent=o?'(opcional)':'(obligatoria a domicilio)'})});
+  $('#dEstado').addEventListener('change',function(){var g=ENVST.geo,e=this.value,m=$('#dMun');$('#dPar').innerHTML='<option value="">Primero elige el municipio</option>';$('#dPar').disabled=true;if(!e||!g){m.innerHTML='<option value="">Primero elige el estado</option>';m.disabled=true;return}m.innerHTML=optsSel(Object.keys(g[e]).sort(function(a,b){return a.localeCompare(b,'es')}),'Elige el municipio');m.disabled=false});
+  $('#dMun').addEventListener('change',function(){var g=ENVST.geo,e=$('#dEstado').value,m=this.value,p=$('#dPar');if(!m||!g){p.innerHTML='<option value="">Primero elige el municipio</option>';p.disabled=true;return}p.innerHTML=optsSel(g[e][m],'Elige la parroquia');p.disabled=false});
+}
+function cargarEnvioNacional(){
+  if(!ENVST.cour){ENVST.cour='cargando';
+    api('couriers?select=id,nombre,recomendado,orden,nota&tenant_id=eq.'+CFG.tid+'&order=orden').then(function(r){return r.json()}).then(function(a){
+      if(!Array.isArray(a)||!a.length)throw 0;
+      $('#listaCour').innerHTML=a.map(function(c){return '<label><input type="radio" name="courier" value="'+esc(c.id)+'" data-n="'+esc(c.nombre)+'"><span>'+esc(c.nombre)+(c.recomendado?' <small class="rec">Recomendado</small>':'')+(c.nota?'<small class="sub">'+esc(c.nota)+'</small>':'')+'</span></label>'}).join('');ENVST.cour='ok';
+    }).catch(function(){ENVST.cour=null;$('#listaCour').innerHTML='<input id="cFallback" maxlength="60" placeholder="Escribe el courier que prefieres (Ej: Tealca, MRW, Zoom)">'});
+  }
+  if(!ENVST.geo){fetch('venezuela.json?v=1').then(function(r){return r.json()}).then(function(g){ENVST.geo=g;$('#dEstado').innerHTML=optsSel(Object.keys(g).sort(function(a,b){return a.localeCompare(b,'es')}),'Elige el estado')}).catch(function(){$('#dEstado').innerHTML='<option value="">No se pudo cargar la lista, recarga la página</option>'})}
+}
+montarEnvio();
+$('#entregas').addEventListener('change',function(){
+  var c=(document.querySelector('input[name=entrega]:checked')||{}).value==='courier';
+  $('#bCour').hidden=!c;$('#bDel').hidden=c;$('#pZona').hidden=c;$('#lblZona').hidden=c;
+  if(c)cargarEnvioNacional();
+});
+
+
 /* ===== Enlace de vendedor (?v=codigo): se recuerda para asignarle el pedido ===== */
 (function(){var v=new URLSearchParams(location.search).get('v');if(v&&/^[A-Za-z0-9_-]{1,20}$/.test(v)){try{localStorage.setItem('nicom_v',v)}catch(_){}}})();
 function vendedor(){try{return localStorage.getItem('nicom_v')||null}catch(_){return null}}
-$('#entregas').addEventListener('change',function(){var c=(document.querySelector('input[name=entrega]:checked')||{}).value==='courier';$('#lblZona').textContent=c?'Ciudad y estado':'Zona o urbanización en Caracas';$('#pZona').placeholder=c?'Ej: Valencia, Carabobo':'Ej: San Bernardino'});
 
 /* ===== Formulario de contacto (validación + WhatsApp) ===== */
 if($('#formContacto'))$('#formContacto').onsubmit=function(e){
