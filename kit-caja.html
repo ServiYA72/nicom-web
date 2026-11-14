@@ -32,6 +32,16 @@
 .mini2{font-size:13px;color:var(--gris);margin-bottom:10px}
 .punto-g{display:grid;gap:24px;grid-template-columns:1fr;align-items:start}
 .punto-img img{width:100%;max-width:420px;height:auto;border-radius:14px;display:block;margin:0 auto}
+.kit img[data-grande]{cursor:zoom-in;transition:transform .25s ease}
+.kit:hover img[data-grande]{transform:scale(1.04)}
+.kit{position:relative}
+.kit-zoom{position:absolute;top:10px;right:10px;background:rgba(15,27,45,.8);color:#fff;font-size:12px;font-weight:700;padding:5px 9px;border-radius:99px;pointer-events:none}
+.kit-img{overflow:hidden;position:relative}
+.lbx{position:fixed;inset:0;z-index:9999;background:rgba(7,14,26,.92);display:none;align-items:center;justify-content:center;padding:16px;cursor:zoom-out}
+.lbx.on{display:flex}
+.lbx img{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:10px;box-shadow:0 10px 50px rgba(0,0,0,.6)}
+.lbx-x{position:absolute;top:14px;right:18px;background:#fff;color:#0f1b2d;border:0;border-radius:99px;font-size:15px;font-weight:700;padding:9px 16px;cursor:pointer}
+@media(hover:none){.kit:hover img[data-grande]{transform:none}}
 @media(min-width:700px){.kits{grid-template-columns:1fr 1fr}}
 @media(min-width:1000px){.kits{grid-template-columns:repeat(4,1fr)}.punto-g{grid-template-columns:1.2fr 1fr}}
 </style>
@@ -78,7 +88,7 @@
     <div class="sec-head"><h2>Elige tu kit de caja</h2><p>Cuatro versiones, de la más económica a la más completa. Todas traen el software Nicom Punto.</p></div>
     <div class="kits">
       <article class="kit" data-kit="Kit Caja Nicom Punto Económico">
-        <img src="img/kit-economico.webp" width="720" height="1000" loading="lazy" alt="Kit Caja Nicom Punto Económico: tablet, impresora térmica de 80 mm, lector de códigos de barras con Nicom Punto">
+        <div class="kit-img"><img src="img/kit-economico.webp" data-grande="img/kit-economico-grande.webp" width="720" height="1000" loading="lazy" alt="Kit Caja Nicom Punto Económico: tablet, impresora térmica de 80 mm, lector de códigos de barras con Nicom Punto"><span class="kit-zoom">Toca para ampliar</span></div>
         <div class="kit-b">
           <h3>Económico</h3>
           <ul class="lista">
@@ -94,7 +104,7 @@
         </div>
       </article>
       <article class="kit" data-kit="Kit Caja Nicom Punto Básico">
-        <img src="img/kit-basico.webp" width="720" height="1000" loading="lazy" alt="Kit Caja Nicom Punto Básico: tablet, impresora térmica de 80 mm, lector de códigos de barras con Nicom Punto">
+        <div class="kit-img"><img src="img/kit-basico.webp" data-grande="img/kit-basico-grande.webp" width="720" height="1000" loading="lazy" alt="Kit Caja Nicom Punto Básico: tablet, impresora térmica de 80 mm, lector de códigos de barras con Nicom Punto"><span class="kit-zoom">Toca para ampliar</span></div>
         <div class="kit-b">
           <h3>Básico</h3>
           <ul class="lista">
@@ -110,7 +120,7 @@
         </div>
       </article>
       <article class="kit" data-kit="Kit Caja Nicom Punto con Gaveta">
-        <img src="img/kit-con-gaveta.webp" width="720" height="1000" loading="lazy" alt="Kit Caja Nicom Punto con Gaveta: tablet, impresora térmica de 80 mm, lector de códigos de barras y gaveta de dinero con Nicom Punto">
+        <div class="kit-img"><img src="img/kit-con-gaveta.webp" data-grande="img/kit-con-gaveta-grande.webp" width="720" height="1000" loading="lazy" alt="Kit Caja Nicom Punto con Gaveta: tablet, impresora térmica de 80 mm, lector de códigos de barras y gaveta de dinero con Nicom Punto"><span class="kit-zoom">Toca para ampliar</span></div>
         <div class="kit-b">
           <h3>Con gaveta</h3>
           <ul class="lista">
@@ -126,7 +136,7 @@
         </div>
       </article>
       <article class="kit" data-kit="Kit Caja Nicom Punto Completo">
-        <img src="img/kit-completo.webp" width="720" height="1000" loading="lazy" alt="Kit Caja Nicom Punto Completo: tablet, impresora térmica de 80 mm, lector de códigos de barras y gaveta de dinero con Nicom Punto">
+        <div class="kit-img"><img src="img/kit-completo.webp" data-grande="img/kit-completo-grande.webp" width="720" height="1000" loading="lazy" alt="Kit Caja Nicom Punto Completo: tablet, impresora térmica de 80 mm, lector de códigos de barras y gaveta de dinero con Nicom Punto"><span class="kit-zoom">Toca para ampliar</span></div>
         <div class="kit-b">
           <h3>Completo</h3>
           <ul class="lista">
@@ -256,6 +266,23 @@
 <div class="toast" id="toast" role="status"></div>
 
 <script src="nicom.js?v=10" defer></script>
+<script>
+(function(){
+  var lb=document.createElement('div');lb.className='lbx';lb.setAttribute('role','dialog');lb.setAttribute('aria-label','Imagen ampliada');
+  lb.innerHTML='<button class="lbx-x" type="button">Cerrar ✕</button><img alt="">';document.body.appendChild(lb);
+  var im=lb.querySelector('img');
+  function abrir(src,alt){im.src=src;im.alt=alt||'';lb.classList.add('on');document.body.style.overflow='hidden'}
+  function cerrar(){lb.classList.remove('on');document.body.style.overflow='';im.removeAttribute('src')}
+  lb.addEventListener('click',cerrar);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')cerrar()});
+  document.querySelectorAll('img[data-grande]').forEach(function(el){
+    el.setAttribute('tabindex','0');el.setAttribute('role','button');
+    el.addEventListener('click',function(){abrir(el.getAttribute('data-grande'),el.alt)});
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();abrir(el.getAttribute('data-grande'),el.alt)}});
+  });
+})();
+</script>
+
 <script>
 (function(){
   var URL='https://tkhzuopapvclmcgxyood.supabase.co',KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRraHp1b3BhcHZjbG1jZ3h5b29kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMDAzNTIsImV4cCI6MjEwMzc3NjM1Mn0.26o1jnPJzcokhweNiMpOB5A3rsUE3ZjxVV9YucD9ByU',SLUG='nicom';
