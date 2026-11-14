@@ -42,8 +42,12 @@
 .lbx img{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:10px;box-shadow:0 10px 50px rgba(0,0,0,.6)}
 .lbx-x{position:absolute;top:14px;right:18px;background:#fff;color:#0f1b2d;border:0;border-radius:99px;font-size:15px;font-weight:700;padding:9px 16px;cursor:pointer}
 @media(hover:none){.kit:hover img[data-grande]{transform:none}}
+@media(min-width:900px){.hero{padding:40px 0 44px}.hero .h1-punto{font-size:44px;line-height:1.1}.hero-g{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}.hero p.sub{max-width:none;margin:14px 0 20px}}
+.shot-hero img[data-grande],.punto-img img[data-grande]{cursor:zoom-in;transition:transform .25s ease}
+.shot-hero:hover img[data-grande],.punto-img:hover img[data-grande]{transform:scale(1.02)}
+@media(hover:none){.shot-hero:hover img[data-grande],.punto-img:hover img[data-grande]{transform:none}}
 @media(min-width:700px){.kits{grid-template-columns:1fr 1fr}}
-@media(min-width:1000px){.kits{grid-template-columns:repeat(4,1fr)}.punto-g{grid-template-columns:1.2fr 1fr}}
+@media(min-width:1000px){.kits{grid-template-columns:repeat(2,1fr);gap:24px}.punto-g{grid-template-columns:1.2fr 1fr}}
 </style>
 </head>
 <body>
@@ -78,7 +82,7 @@
       <a class="btn btn-linea" data-wa="Hola Nicom System, quiero armar mi kit de caja. ¿Me asesoran?" href="#" rel="noopener"><svg class="wa" viewBox="0 0 24 24"><use href="#iwa"/></svg>Pedir asesoría</a>
       <p class="mini">Entrega en Caracas · Envío nacional por courier · Precios en dólares, sin IVA</p>
     </div>
-    <div class="shot-hero"><img src="img/pc-caja.webp" width="1100" height="619" alt="Pantalla de caja de Nicom Punto con productos, carrito y total en dólares y bolívares"></div>
+    <div class="shot-hero" style="position:relative"><img src="img/pc-caja.webp" data-grande="img/pc-caja.webp" width="1100" height="619" alt="Pantalla de caja de Nicom Punto con productos, carrito y total en dólares y bolívares"><span class="kit-zoom">Toca para ampliar</span></div>
   </div>
 </section>
 
@@ -169,7 +173,7 @@
         <li>Compras a proveedores, gastos y la ganancia real del día en una pantalla</li>
         <li>Respaldo en Excel: tus datos son tuyos</li>
       </ul>
-      <div class="punto-img"><img src="img/nicom-punto-ganancia.webp" width="720" height="973" loading="lazy" alt="Pantalla Hoy de Nicom Punto: vendido, ganancia, ventas y productos que se agotan"></div>
+      <div class="punto-img" style="position:relative;max-width:420px;margin:0 auto"><img src="img/nicom-punto-ganancia.webp" data-grande="img/nicom-punto-ganancia.webp" width="720" height="973" loading="lazy" alt="Pantalla Hoy de Nicom Punto: vendido, ganancia, ventas y productos que se agotan"><span class="kit-zoom">Toca para ampliar</span></div>
     </div>
     <p style="margin-top:14px"><a class="btn btn-azul" href="nicom-punto.html">Conocer Nicom Punto</a></p>
   </div>
